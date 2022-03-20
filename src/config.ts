@@ -8,7 +8,7 @@ Data dari bot ini diambil dari situs resmi KBBI (https://kbbi.kemdikbud.go.id/) 
 
 Bot ini dibuat menggunakan *TypeScript*, *Node.js*, *Telegraf*, *Axios*, dan *Cheerio*
 
-Bot ini bersifat _open source_ dengan lisensi *GPL-3.0*, kalian dapat melihat source code dari bot ini pada link [berikut](https://github.com), `,
+Bot ini bersifat _open source_ dengan lisensi *GPL-3.0*, kalian dapat melihat source code dari bot ini pada link [berikut](https://github.com/tfkhdyt/kbbi-bot)`,
     help: `Untuk menggunakan bot ini, kalian hanya perlu mengirimkan kata yang ingin kalian cari kepada bot ini
 
 Jika ada pertanyaan lebih lanjut, silakan tanya langsung kepada saya @tfkhdyt`,

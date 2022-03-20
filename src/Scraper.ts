@@ -5,6 +5,7 @@ import { Parser } from './Parser'
 
 export class Scraper {
   private ejaan: string[] = []
+  private kataTidakBaku?: string = ''
   private pengertian: IPengertian[] = []
   private $: CheerioAPI
   private parser: Parser
@@ -26,9 +27,14 @@ export class Scraper {
 
     this.$('h2').each((_, element) => {
       const hasil = this.$(element)
+      console.log(hasil.html())
+
+      this.kataTidakBaku = hasil.find('small').text() || undefined
 
       // push ejaan ke array
+      hasil.find('small').remove()
       this.ejaan = hasil
+        // .remove('small')
         .text()
         .split(' ')
         .filter(Boolean)
@@ -47,21 +53,27 @@ export class Scraper {
           }
 
           // parse raw pengertian
-          // console.log(this.$(el).text())
-          const rawInfo = this.$(el).text().split('  ').filter(Boolean)
+          console.log(this.$(el).html())
+          // const rawInfo = this.$(el).text().split('  ').filter(Boolean)
 
           // parse jenis kata
-          info.jenisKata = rawInfo[0].split(' ').filter(Boolean)
+          // info.jenisKata = rawInfo[0].split(' ').filter(Boolean)
+          info.jenisKata = this.$(el)
+            .find('font[color=red] span')
+            .map((_, el) => this.$(el).attr('title'))
+            .toArray()
 
-          // console.log(rawInfo)
+          console.log(this.$(el).text())
 
           // parse pengertian
-          if (rawInfo[1].length < 5) {
+          /* if (rawInfo[1].length < 5) {
             info.deskripsi = rawInfo.slice(2).join(' ').trim()
             info.jenisKata.push(rawInfo[1])
           } else {
             info.deskripsi = rawInfo.slice(1).join(' ').trim()
-          }
+          }*/
+          this.$(el).find('font[color=red]').remove()
+          info.deskripsi = this.$(el).text()
 
           // parse raw jenis kata
           info.jenisKata = info.jenisKata.map(
@@ -78,6 +90,7 @@ export class Scraper {
     await this.scrapeData()
     return {
       ejaan: this.ejaan,
+      kataTidakBaku: this.kataTidakBaku,
       pengertian: this.pengertian,
     }
   }

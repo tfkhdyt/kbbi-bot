@@ -70,12 +70,15 @@ bot.help((ctx) => app.sendHelpMessage(ctx))
 
 bot.on('text', async (ctx) => {
   const html = await app.fetchData(ctx.message.text)
-  console.log(html)
+  // console.log(html)
   await app.scrapeData(html)
   const result = app.getResult()
-  console.log(result)
+  // console.log(result)
   if (result.status === 404) {
-    app.sendMessage(ctx, `*${ctx.message.text}* ${result.message}`)
+    app.sendMessage(
+      ctx,
+      `*${ctx.message.text}* ${result.message}, coba masukkan kata lain`
+    )
   } else {
     const ejaan = `*${result.data!.ejaan.join(' ')}*`
     const pengertian = result.data!.pengertian.map((value, index) => {
@@ -85,8 +88,9 @@ bot.on('text', async (ctx) => {
 
     app.sendMessage(
       ctx,
-      `
-${ejaan}
+      `${ejaan} ${
+        result.data!.kataTidakBaku ? '\n' + result.data!.kataTidakBaku : ''
+      }
 
 ${pengertian.join('\n\n')}`
     )

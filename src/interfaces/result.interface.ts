@@ -5,6 +5,7 @@ export interface IPengertian {
 
 export interface ISuccess {
   ejaan: string[]
+  kataTidakBaku?: string
   pengertian: IPengertian[]
 }
 
