@@ -1,11 +1,11 @@
-import { IInfo } from './interfaces/info.interface'
+import { IPengertian } from './interfaces/result.interface'
 import { load, CheerioAPI } from 'cheerio'
 import { Parser } from './Parser'
 // import pretty from 'pretty'
 
 export class Scraper {
   private ejaan: string[] = []
-  private pengertian: IInfo[] = []
+  private pengertian: IPengertian[] = []
   private $: CheerioAPI
   private parser: Parser
 
@@ -41,7 +41,7 @@ export class Scraper {
         .first()
         .children()
         .each((_, el) => {
-          const info: IInfo = {
+          const info: IPengertian = {
             jenisKata: [],
             deskripsi: '',
           }
@@ -55,7 +55,7 @@ export class Scraper {
 
           // console.log(rawInfo)
 
-          // parse deskripsi
+          // parse pengertian
           if (rawInfo[1].length < 5) {
             info.deskripsi = rawInfo.slice(2).join(' ').trim()
             info.jenisKata.push(rawInfo[1])

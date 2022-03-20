@@ -6,7 +6,8 @@ export class Fetcher {
   async getData() {
     try {
       const { data } = await axios.get(
-        'https://kbbi.kemdikbud.go.id/entri/' + this.keyword
+        'https://kbbi.kemdikbud.go.id/entri/' +
+          this.keyword.toLowerCase().trim()
       )
       return data
     } catch (err) {
