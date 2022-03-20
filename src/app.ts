@@ -82,8 +82,12 @@ bot.on('text', async (ctx) => {
   } else {
     const ejaan = `*${result.data!.ejaan.join(' ')}*`
     const pengertian = result.data!.pengertian.map((value, index) => {
-      return `${index + 1}. _${value.jenisKata.join(', ')}_
-\`${value.deskripsi}\``
+      console.log(value)
+      return `${index + 1}. ${
+        value.jenisKata.length !== 0
+          ? '_' + value.jenisKata.join(', ') + '_\n'
+          : ''
+      }\`${value.deskripsi}\``
     })
 
     app.sendMessage(
