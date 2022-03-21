@@ -145,12 +145,12 @@ bot.on('callback_query', (ctx) => {
   ctx.deleteMessage(ctx.callbackQuery.message?.message_id)
   bot.telegram.sendMessage(
     process.env.ADMIN_ID as string,
-    `${sender} mengirim laporan bug baru
+    `@${sender} mengirim laporan bug baru
 Kata: \`${keyword}\``,
     { parse_mode: 'Markdown' }
   )
   ctx.replyWithMarkdown(
-    `Laporan Anda mengenai kata *${keyword}* telah kami terima 😉`
+    `Laporan Anda mengenai kata *${keyword}* telah saya terima 😉`
   )
 })
 
