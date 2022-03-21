@@ -1,6 +1,7 @@
 import { Telegraf, Context, Markup } from 'telegraf'
 import { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
-import { isFuture } from 'date-fns'
+import { isFuture, format } from 'date-fns'
+import { id } from 'date-fns/locale'
 import 'dotenv/config'
 
 import { Fetcher } from './Fetcher'
@@ -105,7 +106,10 @@ class App {
       if (isFuture(result.until)) {
         ctx.replyWithMarkdown(
           `*Anda telah dibanned dari bot ini!*
-Alasan: ${result.reason}`
+Alasan: ${result.reason}
+
+Akses Anda akan dipulihkan pada: 
+*${format(result.until, 'EEEE, d MMMM yyyy HH:mm', { locale: id })}*`
         )
       } else {
         next()
