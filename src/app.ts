@@ -141,9 +141,11 @@ ${pengertian.join('\n\n')}`,
 
 bot.on('callback_query', (ctx) => {
   const keyword = (ctx.callbackQuery as CallbackQuery).data.split('_')[1]
+  const sender = ctx.callbackQuery.from.username
+  ctx.deleteMessage(ctx.callbackQuery.message?.message_id)
   bot.telegram.sendMessage(
     process.env.ADMIN_ID as string,
-    `Terdapat 1 laporan baru
+    `${sender} mengirim laporan bug baru
 Kata: \`${keyword}\``,
     { parse_mode: 'Markdown' }
   )

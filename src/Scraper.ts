@@ -5,7 +5,7 @@ import { Parser } from './Parser'
 
 export class Scraper {
   private ejaan: string[] = []
-  private kataTidakBaku?: string = ''
+  private kataTidakBaku?: string = undefined
   private pengertian: IPengertian[] = []
   private $: CheerioAPI
   private parser: Parser
@@ -29,7 +29,7 @@ export class Scraper {
       const hasil = this.$(element)
       // console.log(hasil.html())
 
-      this.kataTidakBaku ??= hasil.find('small').text() || undefined
+      this.kataTidakBaku ??= hasil.find('small').text()
 
       // push ejaan ke array
       hasil.find('small').remove()
