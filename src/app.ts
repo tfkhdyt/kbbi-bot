@@ -12,6 +12,7 @@ import { CallbackQuery } from './interfaces/callback-query.interface'
 
 class App {
   bot: Telegraf
+  nodeEnv = process.env.NODE_ENV
   private result: IResult = {
     status: 0,
     message: '',
@@ -19,7 +20,8 @@ class App {
   }
 
   constructor(botToken: string) {
-    this.bot = new Telegraf(botToken)
+    this.bot =
+      this.nodeEnv === 'development' ? new Telegraf(botToken) : new Composer()
   }
 
   sendMessage<T>(ctx: Context, message: string, inlineKb?: T) {

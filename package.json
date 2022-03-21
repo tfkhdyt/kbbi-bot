@@ -7,7 +7,9 @@
     "dev": "tsnd --respawn --clear ./src/app.ts",
     "format": "prettier -w ./src",
     "lint": "eslint --fix ./src",
-    "build": "rm -fr ./dist && tsc"
+    "build": "rm -fr ./dist && tsc",
+    "postinstall": "npx pnpm build",
+    "start": "node ./dist/app.js"
   },
   "keywords": [],
   "author": "",
