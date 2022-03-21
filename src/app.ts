@@ -8,7 +8,10 @@ import config from './config'
 import { IResult } from './interfaces/result.interface'
 import { CallbackQuery } from './interfaces/callback-query.interface'
 
-// const botToken = process.env.BOT_TOKEN as string
+const botToken = process.env.BOT_TOKEN as string
+const port = (process.env.PORT || 8080) as number
+const botDomain = process.env.BOT_DOMAIN as string
+const nodeEnv = process.env.NODE_ENV as string
 
 class App {
   bot: Telegraf
@@ -149,4 +152,17 @@ Kata: \`${keyword}\``,
   )
 })
 
-bot.launch().then(() => console.log('Bot is running'))
+if (nodeEnv === 'development') {
+  bot.launch().then(() => console.log('Bot is running in development'))
+} else {
+  bot.telegram.setWebhook(`${botDomain}/bot${botToken}`)
+  bot
+    .launch({
+      webhook: {
+        hookPath: `/bot${botToken}`,
+        port,
+      },
+    })
+    .then(() => console.log('Bot is running in production'))
+  // bot.startWebhook(`/bot${botToken}`, null, port)
+}
