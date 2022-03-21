@@ -7,6 +7,7 @@ import { Scraper } from './Scraper'
 import config from './config'
 import { IResult } from './interfaces/result.interface'
 import { CallbackQuery } from './interfaces/callback-query.interface'
+import { blackList } from './blacklist'
 
 const botToken = process.env.BOT_TOKEN as string
 const port = (process.env.PORT || 8080) as number
@@ -21,6 +22,7 @@ class App {
     message: '',
     data: null,
   }
+  private blackList = blackList
 
   constructor(botToken: string) {
     this.bot = new Telegraf(botToken)
@@ -92,10 +94,25 @@ class App {
   ) {
     return Markup.inlineKeyboard([reportBtn, urlBtn])
   }
+
+  checkBlackList(ctx: Context, next: () => Promise<void>) {
+    const username = ctx.message?.from.username
+    const result = blackList.find((value) => value.username === username)
+    if (!result) {
+      next()
+    } else {
+      ctx.replyWithMarkdown(
+        `*Anda telah dibanned dari bot ini!*
+Alasan: ${result.reason}`
+      )
+    }
+  }
 }
 
 const app = new App(config.botToken)
 const bot = app.bot
+
+bot.use(app.checkBlackList)
 
 bot.start((ctx) => app.sendStartMessage(ctx))
 
