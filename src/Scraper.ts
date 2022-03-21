@@ -29,7 +29,7 @@ export class Scraper {
       const hasil = this.$(element)
       // console.log(hasil.html())
 
-      this.kataTidakBaku ??= hasil.find('small').text()
+      this.kataTidakBaku ??= hasil.find('small').text().replace(/[0-9]/g, '')
 
       // push ejaan ke array
       hasil.find('small').remove()
