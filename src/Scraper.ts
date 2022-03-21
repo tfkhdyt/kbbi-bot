@@ -27,7 +27,7 @@ export class Scraper {
 
     this.$('h2').each((_, element) => {
       const hasil = this.$(element)
-      console.log(hasil.html())
+      // console.log(hasil.html())
 
       this.kataTidakBaku = hasil.find('small').text() || undefined
 
@@ -43,8 +43,8 @@ export class Scraper {
       hasil
         /* .next()
         .next() */
-        .siblings('ul,ol')
-        .first()
+        .siblings('ul.adjusted-par,ol')
+        // .first()
         .children()
         .each((_, el) => {
           const info: IPengertian = {
@@ -53,7 +53,7 @@ export class Scraper {
           }
 
           // parse raw pengertian
-          console.log(this.$(el).html())
+          // console.log(this.$(el).html())
           // const rawInfo = this.$(el).text().split('  ').filter(Boolean)
 
           // parse jenis kata
@@ -63,7 +63,7 @@ export class Scraper {
             .map((_, el) => this.$(el).attr('title'))
             .toArray()
 
-          console.log(this.$(el).text())
+          // console.log(this.$(el).text())
 
           // parse pengertian
           /* if (rawInfo[1].length < 5) {
@@ -81,6 +81,10 @@ export class Scraper {
           ) as string[]
 
           // push objek info ke array pengertian
+          if (
+            this.pengertian.find((value) => value.deskripsi === info.deskripsi)
+          )
+            return
           this.pengertian.push(info)
         })
     })
