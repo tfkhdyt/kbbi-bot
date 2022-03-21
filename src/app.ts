@@ -1,5 +1,6 @@
 import { Telegraf, Context, Markup } from 'telegraf'
 import { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
+import { isFuture } from 'date-fns'
 import 'dotenv/config'
 
 import { Fetcher } from './Fetcher'
@@ -22,7 +23,7 @@ class App {
     message: '',
     data: null,
   }
-  private blackList = blackList
+  // private blackList = blackList
 
   constructor(botToken: string) {
     this.bot = new Telegraf(botToken)
@@ -101,10 +102,14 @@ class App {
     if (!result) {
       next()
     } else {
-      ctx.replyWithMarkdown(
-        `*Anda telah dibanned dari bot ini!*
+      if (isFuture(result.until)) {
+        ctx.replyWithMarkdown(
+          `*Anda telah dibanned dari bot ini!*
 Alasan: ${result.reason}`
-      )
+        )
+      } else {
+        next()
+      }
     }
   }
 }
