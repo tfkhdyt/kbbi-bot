@@ -20,8 +20,7 @@ class App {
   }
 
   constructor(botToken: string) {
-    this.bot =
-      this.nodeEnv === 'development' ? new Telegraf(botToken) : new Composer()
+    this.bot = new Telegraf(botToken)
   }
 
   sendMessage<T>(ctx: Context, message: string, inlineKb?: T) {
