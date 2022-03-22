@@ -79,6 +79,10 @@ export class Scraper {
           this.$(el).find('font[color=red]').remove()
           info.deskripsi = this.$(el).text()
 
+          if (info.deskripsi.includes('→')) {
+            info.deskripsi.replace(/[0-9]/g, '')
+          }
+
           // prevent duplicate deskripsi
           if (
             this.pengertian.find((value) => value.deskripsi === info.deskripsi)
