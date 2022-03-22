@@ -1,5 +1,7 @@
+// module
 import axios from 'axios'
 
+// fetcher class
 export class Fetcher {
   constructor(private keyword: string) {}
 

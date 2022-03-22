@@ -1,21 +1,30 @@
-import { Telegraf, Context, Markup } from 'telegraf'
+// modules
 import { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
+import { Telegraf, Context, Markup } from 'telegraf'
 import { isFuture, format } from 'date-fns'
 import { id } from 'date-fns/locale'
 import 'dotenv/config'
 
+// interfaces
+import { CallbackQuery } from './interfaces/callback-query.interface'
+import { IResult } from './interfaces/result.interface'
+
+// etc
+import { blackList } from './blacklist/blacklist'
+import config from './config/config'
+
+// classes
 import { Fetcher } from './Fetcher'
 import { Scraper } from './Scraper'
-import config from './config'
-import { IResult } from './interfaces/result.interface'
-import { CallbackQuery } from './interfaces/callback-query.interface'
-import { blackList } from './blacklist'
 
-const botToken = process.env.BOT_TOKEN as string
-const port = (process.env.PORT || 8080) as number
+// environment variables
 const botDomain = process.env.BOT_DOMAIN as string
+const port = (process.env.PORT || 8080) as number
+const botToken = process.env.BOT_TOKEN as string
 const nodeEnv = process.env.NODE_ENV as string
+const adminId = process.env.ADMIN_ID as string
 
+// App class
 class App {
   bot: Telegraf
   nodeEnv = process.env.NODE_ENV
@@ -24,13 +33,12 @@ class App {
     message: '',
     data: null,
   }
-  // private blackList = blackList
 
   constructor(botToken: string) {
     this.bot = new Telegraf(botToken)
   }
 
-  sendMessage<T>(ctx: Context, message: string, inlineKb?: T) {
+  private sendMessage<T>(ctx: Context, message: string, inlineKb?: T) {
     const messageId = ctx.message!.message_id
     if (typeof inlineKb !== 'undefined')
       ctx.replyWithMarkdown(message, {
@@ -48,12 +56,12 @@ class App {
     this.sendMessage(ctx, config.message.help)
   }
 
-  fetchData(keyword: string) {
+  private fetchData(keyword: string) {
     const fetcher = new Fetcher(keyword)
     return fetcher.getData()
   }
 
-  async scrapeData(html: string) {
+  private async scrapeData(html: string) {
     const scraper = new Scraper(html)
     const result = await scraper
       .getData()
@@ -72,25 +80,25 @@ class App {
     }
   }
 
-  getResult() {
+  private getResult() {
     return this.result
   }
 
-  createUrlButton(keyword: string) {
+  private createUrlButton(keyword: string) {
     return Markup.button.url(
       `📕 ${keyword.toLowerCase()}`,
       `https://kbbi.kemdikbud.go.id/entri/${keyword.toLowerCase()}`
     )
   }
 
-  createReportButton(keyword: string) {
+  private createReportButton(keyword: string) {
     return Markup.button.callback(
       '🐞 Laporkan Bug',
       `bug_${keyword.toLowerCase()}`
     )
   }
 
-  createInlineKeyboard(
+  private createInlineKeyboard(
     reportBtn: InlineKeyboardButton.CallbackButton,
     urlBtn: InlineKeyboardButton.UrlButton
   ) {
@@ -116,70 +124,80 @@ Akses Anda akan dipulihkan pada:
       }
     }
   }
+
+  async main(ctx: Context, keyword: string) {
+    const html = await this.fetchData(keyword)
+    // console.log(html)
+    await this.scrapeData(html)
+    const result = this.getResult()
+    // console.log(result)
+    if (result.status === 404) {
+      app.sendMessage(
+        ctx,
+        `*${keyword}* ${result.message}, coba masukkan kata lain`
+      )
+    } else {
+      const ejaan = `*${result.data!.ejaan.join(' ').toLowerCase()}*`
+      const pengertian = result.data!.pengertian.map((value, index) => {
+        // console.log(value)
+        return `${index + 1}. ${
+          value.jenisKata.length !== 0
+            ? '_' + value.jenisKata.join(', ') + '_\n'
+            : ''
+        }\`${value.deskripsi}\``
+      })
+
+      this.sendMessage(
+        ctx,
+        `${ejaan} ${
+          result.data!.kataTidakBaku ? '\n' + result.data!.kataTidakBaku : ''
+        }
+
+${pengertian.join('\n\n')}`,
+        this.createInlineKeyboard(
+          this.createReportButton(keyword),
+          this.createUrlButton(keyword)
+        )
+      )
+    }
+  }
+
+  reportBug(ctx: Context) {
+    const keyword = (ctx.callbackQuery as CallbackQuery).data.split('_')[1]
+    const sender = ctx.callbackQuery?.from.username
+    ctx.deleteMessage(ctx.callbackQuery?.message?.message_id)
+    this.bot.telegram.sendMessage(
+      adminId,
+      `@${sender} mengirim laporan bug baru
+Kata: \`${keyword}\``,
+      { parse_mode: 'Markdown' }
+    )
+    ctx.replyWithMarkdown(
+      `Laporan Anda mengenai kata *${keyword}* telah saya terima 😉`
+    )
+  }
 }
 
+// class instantiation
 const app = new App(config.botToken)
 const bot = app.bot
 
+// middleware
 bot.use(app.checkBlackList)
 
+// event handler
 bot.start((ctx) => app.sendStartMessage(ctx))
 
 bot.help((ctx) => app.sendHelpMessage(ctx))
 
-bot.on('text', async (ctx) => {
+bot.on('text', (ctx) => {
   const keyword = ctx.message.text
-  const html = await app.fetchData(keyword)
-  // console.log(html)
-  await app.scrapeData(html)
-  const result = app.getResult()
-  // console.log(result)
-  if (result.status === 404) {
-    app.sendMessage(
-      ctx,
-      `*${ctx.message.text}* ${result.message}, coba masukkan kata lain`
-    )
-  } else {
-    const ejaan = `*${result.data!.ejaan.join(' ').toLowerCase()}*`
-    const pengertian = result.data!.pengertian.map((value, index) => {
-      // console.log(value)
-      return `${index + 1}. ${
-        value.jenisKata.length !== 0
-          ? '_' + value.jenisKata.join(', ') + '_\n'
-          : ''
-      }\`${value.deskripsi}\``
-    })
-
-    app.sendMessage(
-      ctx,
-      `${ejaan} ${
-        result.data!.kataTidakBaku ? '\n' + result.data!.kataTidakBaku : ''
-      }
-
-${pengertian.join('\n\n')}`,
-      app.createInlineKeyboard(
-        app.createReportButton(keyword),
-        app.createUrlButton(keyword)
-      )
-    )
-  }
+  app.main(ctx, keyword)
 })
 
-bot.on('callback_query', (ctx) => {
-  const keyword = (ctx.callbackQuery as CallbackQuery).data.split('_')[1]
-  const sender = ctx.callbackQuery.from.username
-  ctx.deleteMessage(ctx.callbackQuery.message?.message_id)
-  bot.telegram.sendMessage(
-    process.env.ADMIN_ID as string,
-    `@${sender} mengirim laporan bug baru
-Kata: \`${keyword}\``,
-    { parse_mode: 'Markdown' }
-  )
-  ctx.replyWithMarkdown(
-    `Laporan Anda mengenai kata *${keyword}* telah saya terima 😉`
-  )
-})
+bot.on('callback_query', (ctx) => app.reportBug(ctx))
 
+// launcher
 if (nodeEnv === 'development') {
   bot.launch().then(() => console.log('Bot is running in development'))
 } else {
@@ -194,3 +212,7 @@ if (nodeEnv === 'development') {
     .then(() => console.log('Bot is running in production'))
   // bot.startWebhook(`/bot${botToken}`, null, port)
 }
+
+// Enable graceful stop
+process.once('SIGINT', () => bot.stop('SIGINT'))
+process.once('SIGTERM', () => bot.stop('SIGTERM'))
