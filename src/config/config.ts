@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 export default {
   message: {
     start: `Selamat datang di bot *KBBI*

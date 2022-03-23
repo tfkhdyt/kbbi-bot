@@ -1,5 +1,4 @@
 // modules
-import 'dotenv/config'
 import { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
 import { Telegraf, Context, Markup } from 'telegraf'
 import { isFuture, format } from 'date-fns'
