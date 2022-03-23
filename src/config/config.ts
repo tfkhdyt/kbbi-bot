@@ -13,5 +13,9 @@ Bot ini bersifat _open source_ dengan lisensi *GPL-3.0*, kalian dapat melihat so
 
 Jika ada pertanyaan lebih lanjut, silakan tanya langsung kepada saya @tfkhdyt`,
   },
+  botDomain: process.env.BOT_DOMAIN as string,
+  port: (process.env.PORT || 8080) as number,
   botToken: process.env.BOT_TOKEN as string,
+  nodeEnv: process.env.NODE_ENV as string,
+  adminId: process.env.ADMIN_ID as string,
 }
