@@ -3,7 +3,6 @@ import { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
 import { Telegraf, Context, Markup } from 'telegraf'
 import { isFuture, format } from 'date-fns'
 import { id } from 'date-fns/locale'
-import 'dotenv/config'
 
 // interfaces
 import { CallbackQuery } from './interfaces/callback-query.interface'
@@ -16,13 +15,6 @@ import config from './config/config'
 // classes
 import { Fetcher } from './Fetcher'
 import { Scraper } from './Scraper'
-
-// environment variables
-const botDomain = process.env.BOT_DOMAIN as string
-const port = (process.env.PORT || 8080) as number
-const botToken = process.env.BOT_TOKEN as string
-const nodeEnv = process.env.NODE_ENV as string
-const adminId = process.env.ADMIN_ID as string
 
 // App class
 class App {
@@ -167,7 +159,7 @@ ${pengertian.join('\n\n')}`,
     const sender = ctx.callbackQuery?.from.username
     ctx.deleteMessage(ctx.callbackQuery?.message?.message_id)
     this.bot.telegram.sendMessage(
-      adminId,
+      config.adminId,
       `@${sender} mengirim laporan bug baru
 Kata: \`${keyword}\``,
       { parse_mode: 'Markdown' }
@@ -198,15 +190,15 @@ bot.on('text', (ctx) => {
 bot.on('callback_query', (ctx) => app.reportBug(ctx))
 
 // launcher
-if (nodeEnv === 'development') {
+if (config.nodeEnv === 'development') {
   bot.launch().then(() => console.log('Bot is running in development'))
 } else {
-  bot.telegram.setWebhook(`${botDomain}/bot${botToken}`)
+  bot.telegram.setWebhook(`${config.botDomain}/bot${config.botToken}`)
   bot
     .launch({
       webhook: {
-        hookPath: `/bot${botToken}`,
-        port,
+        hookPath: `/bot${config.botToken}`,
+        port: config.port,
       },
     })
     .then(() => console.log('Bot is running in production'))
