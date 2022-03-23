@@ -1,9 +1,9 @@
 // modules
+import 'dotenv/config'
 import { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
 import { Telegraf, Context, Markup } from 'telegraf'
 import { isFuture, format } from 'date-fns'
 import { id } from 'date-fns/locale'
-import 'dotenv/config'
 
 // interfaces
 import { CallbackQuery } from './interfaces/callback-query.interface'
