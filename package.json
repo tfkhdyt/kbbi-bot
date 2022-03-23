@@ -5,8 +5,8 @@
   "main": "src/app.ts",
   "scripts": {
     "dev": "tsnd --respawn --clear ./src/app.ts",
-    "format": "prettier -w ./src",
-    "lint": "eslint --fix ./src",
+    "format": "prettier -w ./src/**/*.ts",
+    "lint": "eslint --fix ./src/**/*.ts",
     "build": "rm -fr ./dist && tsc",
     "postinstall": "npx pnpm build",
     "start": "node ./dist/app.js"

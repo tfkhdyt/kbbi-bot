@@ -1001,8 +1001,8 @@ packages:
     dependencies:
       brace-expansion: 1.1.11
 
-  /minimist/1.2.5:
-    resolution: {integrity: sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==}
+  /minimist/1.2.6:
+    resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
 
   /mkdirp/1.0.4:
     resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
@@ -1300,7 +1300,7 @@ packages:
     dependencies:
       abort-controller: 3.0.0
       debug: 4.3.4
-      minimist: 1.2.5
+      minimist: 1.2.6
       module-alias: 2.2.2
       node-fetch: 2.6.7
       p-timeout: 4.1.0
@@ -1345,7 +1345,7 @@ packages:
     dependencies:
       chokidar: 3.5.3
       dynamic-dedupe: 0.3.0
-      minimist: 1.2.5
+      minimist: 1.2.6
       mkdirp: 1.0.4
       resolve: 1.22.0
       rimraf: 2.7.1
