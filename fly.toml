@@ -11,7 +11,6 @@ processes = []
 
 [env]
   PORT = "8080"
-  NODE_ENV = "production"
 
 [experimental]
   allowed_public_ports = []
@@ -42,3 +41,4 @@ processes = []
     interval = "15s"
     restart_limit = 0
     timeout = "2s"
+
