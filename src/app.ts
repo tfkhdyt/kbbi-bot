@@ -160,7 +160,7 @@ ${pengertian.join('\n\n')}`,
     const sender = ctx.callbackQuery?.from.username
     ctx.deleteMessage(ctx.callbackQuery?.message?.message_id)
     this.bot.telegram.sendMessage(
-      adminId,
+      config.adminId,
       `@${sender} mengirim laporan bug baru
 Kata: \`${keyword}\``,
       { parse_mode: 'Markdown' }
