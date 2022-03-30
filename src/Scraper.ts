@@ -9,6 +9,7 @@ import { IPengertian } from './interfaces/result.interface'
 export class Scraper {
   private ejaan: string[] = []
   private kataTidakBaku?: string = undefined
+  private prakategorial?: string = undefined
   private pengertian: IPengertian[] = []
   private $: CheerioAPI
 
@@ -26,6 +27,14 @@ export class Scraper {
   private async scrapeData() {
     // check data is found or not
     this.checkNotFound()
+
+    // get prakategorial
+    this.prakategorial ??= this.$(
+      'font[title="prakategorial: kata tidak dipakai dalam bentuk dasarnya"]'
+    )
+      .next()
+      .text() as string
+    // console.log('prakategorial: ', this.prakategorial)
 
     this.$('h2').each((_, element) => {
       const hasil = this.$(element)
@@ -101,6 +110,7 @@ export class Scraper {
       ejaan: this.ejaan,
       kataTidakBaku: this.kataTidakBaku,
       pengertian: this.pengertian,
+      prakategorial: this.prakategorial,
     }
   }
 }

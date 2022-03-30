@@ -34,11 +34,12 @@ class App {
   private sendMessage<T>(ctx: Context, message: string, inlineKb?: T) {
     const messageId = ctx.message!.message_id
     if (typeof inlineKb !== 'undefined')
-      ctx.replyWithMarkdown(message, {
+      ctx.replyWithMarkdown(message.trim(), {
         reply_to_message_id: messageId,
         ...inlineKb,
       })
-    else ctx.replyWithMarkdown(message, { reply_to_message_id: messageId })
+    else
+      ctx.replyWithMarkdown(message.trim(), { reply_to_message_id: messageId })
   }
 
   sendStartMessage(ctx: Context) {
@@ -146,7 +147,16 @@ Akses Anda akan dipulihkan pada:
           result.data!.kataTidakBaku ? '\n' + result.data!.kataTidakBaku : ''
         }
 
-${pengertian.join('\n\n')}`,
+${pengertian.join('\n\n')}${
+          result.data!.prakategorial
+            ? `_Prakategorial: kata tidak dipakai dalam bentuk dasarnya_
+${result
+  .data!.prakategorial.split(', ')
+  .map((text) => `\`${text}\``)
+  .join(', ')}`
+            : ''
+        }
+`,
         this.createInlineKeyboard(
           this.createReportButton(keyword),
           this.createUrlButton(keyword)
