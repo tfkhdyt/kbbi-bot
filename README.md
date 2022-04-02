@@ -1,6 +1,6 @@
 ## KBBI Bot
 
-Sebuah Bot Telegram KBBI yang datanya diambil menggunakan metode _Web Scraping_. Sumber datanya diambul dari [situs resmi KBBI](https://kbbi.kemdikbud.go.id)
+Sebuah Bot Telegram KBBI yang datanya diambil menggunakan metode _Web Scraping_. Sumber datanya diambil dari [situs resmi KBBI](https://kbbi.kemdikbud.go.id)
 
 ## Built With
 
@@ -34,26 +34,26 @@ cd kbbi-bot
 3. Install dependencies
 
 ```bash
-" NPM
+# NPM
 npm install
 
-" Yarn
+# Yarn
 yarn install
 
-" PNPM
+# PNPM
 pnpm install
 ```
 
 4. Jalankan Bot
 
 ```bash
-" NPM
+# NPM
 npm run dev
 
-" Yarn
+# Yarn
 yarn dev
 
-" PNPM
+# PNPM
 pnpm dev
 ```
 
@@ -62,65 +62,65 @@ pnpm dev
 - Run the bot (watch mode)
 
 ```bash
-" NPM
+# NPM
 npm run dev
 
-" Yarn
+# Yarn
 yarn dev
 
-" PNPM
+# PNPM
 pnpm dev
 ```
 
 - Build
 
 ```bash
-" NPM
+# NPM
 npm run build
 
-" Yarn
+# Yarn
 yarn build
 
-" PNPM
+# PNPM
 pnpm build
 ```
 
 - Run the bot
 
 ```bash
-" NPM
+# NPM
 npm run start
 
-" Yarn
+# Yarn
 yarn start
 
-" PNPM
+# PNPM
 pnpm start
 ```
 
 - Format the code (Prettier)
 
 ```bash
-" NPM
+# NPM
 npm run format
 
-" Yarn
+# Yarn
 yarn format
 
-" PNPM
+# PNPM
 pnpm format
 ```
 
 - Lint the code (ESLint)
 
 ```bash
-" NPM
+# NPM
 npm run lint
 
-" Yarn
+# Yarn
 yarn lint
 
-" PNPM
+# PNPM
 pnpm lint
 ```
 
