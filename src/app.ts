@@ -93,10 +93,10 @@ class App {
   }
 
   private createInlineKeyboard(
-    reportBtn: InlineKeyboardButton.CallbackButton,
+    // reportBtn: InlineKeyboardButton.CallbackButton,
     urlBtn: InlineKeyboardButton.UrlButton
   ) {
-    return Markup.inlineKeyboard([reportBtn, urlBtn])
+    return Markup.inlineKeyboard([/* reportBtn, */ urlBtn])
   }
 
   checkBlackList(ctx: Context, next: () => Promise<void>) {
@@ -158,7 +158,7 @@ ${result
         }
 `,
         this.createInlineKeyboard(
-          this.createReportButton(keyword),
+          // this.createReportButton(keyword),
           this.createUrlButton(keyword)
         )
       )
@@ -208,6 +208,7 @@ if (config.nodeEnv === 'development') {
   bot
     .launch({
       webhook: {
+        domain: config.botDomain,
         hookPath: `/bot${config.botToken}`,
         port: config.port,
       },
