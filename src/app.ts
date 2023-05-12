@@ -204,12 +204,10 @@ bot.on('callback_query', (ctx) => app.reportBug(ctx))
 if (config.nodeEnv === 'development') {
   bot.launch().then(() => console.log('Bot is running in development'))
 } else {
-  bot.telegram.setWebhook(`${config.botDomain}/bot${config.botToken}`)
   bot
     .launch({
       webhook: {
-        domain: '0.0.0.0',
-        hookPath: `/bot${config.botToken}`,
+        domain: config.botDomain,
         port: config.port,
       },
     })
