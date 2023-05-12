@@ -208,7 +208,7 @@ if (config.nodeEnv === 'development') {
   bot
     .launch({
       webhook: {
-        domain: config.botDomain,
+        domain: '0.0.0.0',
         hookPath: `/bot${config.botToken}`,
         port: config.port,
       },
