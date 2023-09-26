@@ -9,7 +9,7 @@
     "format": "prettier -w ./src/",
     "lint": "tsc --noEmit && eslint --fix src/",
     "build": "tsc",
-    "start": "bun run ./src/main.ts",
+    "start": "bun run dist/main.js",
     "generate": "drizzle-kit generate:pg"
   },
   "keywords": [],
@@ -23,8 +23,10 @@
     "telegraf": "^4.14.0"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "latest",
     "@typescript-eslint/eslint-plugin": "^6.7.3",
     "@typescript-eslint/parser": "^6.7.3",
+    "bun-types": "^1.0.3",
     "drizzle-kit": "^0.19.13",
     "eslint": "^8.50.0",
     "prettier": "^3.0.3",

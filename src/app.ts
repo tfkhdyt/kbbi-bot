@@ -1,18 +1,13 @@
-import { format, isFuture } from 'date-fns'
-import { id } from 'date-fns/locale'
 import { eq, sql } from 'drizzle-orm'
-import { HttpsProxyAgent } from 'https-proxy-agent'
-import { Context, Markup, Telegraf } from 'telegraf'
-import { InlineKeyboardButton } from 'telegraf/types'
+import { Context, Telegraf } from 'telegraf'
 
-import { Fetcher } from './Fetcher'
-import { Scraper } from './Scraper'
-import { blackList } from './blacklist/blacklist'
-import config from './config/config'
-import { db } from './db/postgres'
-import { User, users } from './db/postgres/schemas/user.schema'
-import { CallbackQuery } from './interfaces/callback-query.interface'
-import { IResult } from './interfaces/result.interface'
+import { Fetcher } from './Fetcher.js'
+import { Scraper } from './Scraper.js'
+import config from './config/config.js'
+import { db } from './db/postgres/index.js'
+import { User, users } from './db/postgres/schemas/user.schema.js'
+import { CallbackQuery } from './interfaces/callback-query.interface.js'
+import { IResult } from './interfaces/result.interface.js'
 
 interface MyContext extends Context {
   user: User
@@ -81,12 +76,12 @@ export default class App {
     return this.result
   }
 
-  private createUrlButton(keyword: string) {
-    return Markup.button.url(
-      `📕 ${keyword.toLowerCase()}`,
-      `https://kbbi.kemdikbud.go.id/entri/${keyword.toLowerCase()}`,
-    )
-  }
+  // private createUrlButton(keyword: string) {
+  //   return Markup.button.url(
+  //     `📕 ${keyword.toLowerCase()}`,
+  //     `https://kbbi.kemdikbud.go.id/entri/${keyword.toLowerCase()}`,
+  //   )
+  // }
 
   // private createReportButton(keyword: string) {
   //   return Markup.button.callback(
@@ -95,32 +90,32 @@ export default class App {
   //   )
   // }
 
-  private createInlineKeyboard(
-    // reportBtn: InlineKeyboardButton.CallbackButton,
-    urlBtn: InlineKeyboardButton.UrlButton,
-  ) {
-    return Markup.inlineKeyboard([/* reportBtn, */ urlBtn])
-  }
+  // private createInlineKeyboard(
+  //   // reportBtn: InlineKeyboardButton.CallbackButton,
+  //   urlBtn: InlineKeyboardButton.UrlButton,
+  // ) {
+  //   return Markup.inlineKeyboard([/* reportBtn, */ urlBtn])
+  // }
 
-  checkBlackList(ctx: Context, next: () => Promise<void>) {
-    const username = ctx.message?.from.username
-    const result = blackList.find((value) => value.username === username)
-    if (!result) {
-      next()
-    } else {
-      if (isFuture(result.until)) {
-        ctx.replyWithMarkdown(
-          `*Anda telah dibanned dari bot ini!*
-Alasan: ${result.reason}
-
-Akses Anda akan dipulihkan pada: 
-*${format(result.until, 'EEEE, d MMMM yyyy HH:mm', { locale: id })}*`,
-        )
-      } else {
-        next()
-      }
-    }
-  }
+  //   checkBlackList(ctx: Context, next: () => Promise<void>) {
+  //     const username = ctx.message?.from.username
+  //     const result = blackList.find((value) => value.username === username)
+  //     if (!result) {
+  //       next()
+  //     } else {
+  //       if (isFuture(result.until)) {
+  //         ctx.replyWithMarkdown(
+  //           `*Anda telah dibanned dari bot ini!*
+  // Alasan: ${result.reason}
+  //
+  // Akses Anda akan dipulihkan pada:
+  // *${format(result.until, 'EEEE, d MMMM yyyy HH:mm', { locale: id })}*`,
+  //         )
+  //       } else {
+  //         next()
+  //       }
+  //     }
+  //   }
 
   async main(ctx: MyContext, keyword: string) {
     const html = await this.fetchData(keyword)

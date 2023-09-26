@@ -3,10 +3,10 @@ import { drizzle } from 'drizzle-orm/postgres-js'
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
 import { message } from 'telegraf/filters'
 
-import App from './app'
-import config from './config/config'
-import { db, migrationClient } from './db/postgres'
-import { users } from './db/postgres/schemas/user.schema'
+import App from './app.js'
+import config from './config/config.js'
+import { db, migrationClient } from './db/postgres/index.js'
+import { users } from './db/postgres/schemas/user.schema.js'
 
 await migrate(drizzle(migrationClient), { migrationsFolder: 'drizzle' })
 
@@ -15,7 +15,6 @@ const app = new App(config.botToken)
 const bot = app.bot
 
 // middleware
-bot.use(app.checkBlackList)
 bot.use(async (ctx, next) => {
   try {
     const userId = ctx.from?.id

@@ -3,7 +3,7 @@ import { load, CheerioAPI } from 'cheerio'
 // import pretty from 'pretty'
 
 // interface
-import { IPengertian } from './interfaces/result.interface'
+import { IPengertian } from './interfaces/result.interface.js'
 
 // scraper class
 export class Scraper {
@@ -30,7 +30,7 @@ export class Scraper {
 
     // get prakategorial
     this.prakategorial ??= this.$(
-      'font[title="prakategorial: kata tidak dipakai dalam bentuk dasarnya"]'
+      'font[title="prakategorial: kata tidak dipakai dalam bentuk dasarnya"]',
     )
       .next()
       .text() as string
