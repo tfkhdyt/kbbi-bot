@@ -8,7 +8,6 @@ Sebuah Bot Telegram KBBI yang datanya diambil menggunakan metode _Web Scraping_.
 - [Node.js](https://nodejs.org)
 - [Cheerio](https://cheerio.js.org/)
 - [Telegraf](https://telegraf.js.org/)
-- [Axios](https://axios-http.com/)
 
 ## Getting Started
 

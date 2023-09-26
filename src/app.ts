@@ -1,6 +1,7 @@
 // modules
 import { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
 import { Telegraf, Context, Markup } from 'telegraf'
+import { message } from 'telegraf/filters'
 import { isFuture, format } from 'date-fns'
 import { id } from 'date-fns/locale'
 import 'dotenv/config'
@@ -39,7 +40,9 @@ class App {
         ...inlineKb,
       })
     else
-      ctx.replyWithMarkdown(message.trim(), { reply_to_message_id: messageId })
+      ctx.replyWithMarkdown(message.trim(), {
+        reply_to_message_id: messageId,
+      })
   }
 
   sendStartMessage(ctx: Context) {
@@ -81,20 +84,20 @@ class App {
   private createUrlButton(keyword: string) {
     return Markup.button.url(
       `📕 ${keyword.toLowerCase()}`,
-      `https://kbbi.kemdikbud.go.id/entri/${keyword.toLowerCase()}`
+      `https://kbbi.kemdikbud.go.id/entri/${keyword.toLowerCase()}`,
     )
   }
 
-  private createReportButton(keyword: string) {
-    return Markup.button.callback(
-      '🐞 Laporkan Bug',
-      `bug_${keyword.toLowerCase()}`
-    )
-  }
+  // private createReportButton(keyword: string) {
+  //   return Markup.button.callback(
+  //     '🐞 Laporkan Bug',
+  //     `bug_${keyword.toLowerCase()}`,
+  //   )
+  // }
 
   private createInlineKeyboard(
     // reportBtn: InlineKeyboardButton.CallbackButton,
-    urlBtn: InlineKeyboardButton.UrlButton
+    urlBtn: InlineKeyboardButton.UrlButton,
   ) {
     return Markup.inlineKeyboard([/* reportBtn, */ urlBtn])
   }
@@ -111,7 +114,7 @@ class App {
 Alasan: ${result.reason}
 
 Akses Anda akan dipulihkan pada: 
-*${format(result.until, 'EEEE, d MMMM yyyy HH:mm', { locale: id })}*`
+*${format(result.until, 'EEEE, d MMMM yyyy HH:mm', { locale: id })}*`,
         )
       } else {
         next()
@@ -121,46 +124,48 @@ Akses Anda akan dipulihkan pada:
 
   async main(ctx: Context, keyword: string) {
     const html = await this.fetchData(keyword)
-    // console.log(html)
+    if (html === undefined) {
+      return app.sendMessage(
+        ctx,
+        `Terjadi kesalahan yang tidak terduga, silakan coba lagi`,
+      )
+    }
     await this.scrapeData(html)
     const result = this.getResult()
-    // console.log(result)
+
     if (result.status === 404) {
       app.sendMessage(
         ctx,
-        `*${keyword}* ${result.message}, coba masukkan kata lain`
+        `*${keyword}* ${result.message}, coba masukkan kata lain`,
       )
     } else {
       const ejaan = `*${result.data!.ejaan.join(' ').toLowerCase()}*`
       const pengertian = result.data!.pengertian.map((value, index) => {
         // console.log(value)
-        return `${index + 1}. ${
-          value.jenisKata.length !== 0
+        return `${index + 1}. ${value.jenisKata.length !== 0
             ? '_' + value.jenisKata.join(', ') + '_\n'
             : ''
-        }\`${value.deskripsi}\``
+          }\`${value.deskripsi}\``
       })
 
       this.sendMessage(
         ctx,
-        `${ejaan} ${
-          result.data!.kataTidakBaku ? '\n' + result.data!.kataTidakBaku : ''
+        `${ejaan} ${result.data!.kataTidakBaku ? '\n' + result.data!.kataTidakBaku : ''
         }
 
-${pengertian.join('\n\n')}${
-          result.data!.prakategorial
-            ? `_Prakategorial: kata tidak dipakai dalam bentuk dasarnya_
+${pengertian.join('\n\n')}${result.data!.prakategorial
+          ? `_Prakategorial: kata tidak dipakai dalam bentuk dasarnya_
 ${result
-  .data!.prakategorial.split(', ')
-  .map((text) => `\`${text}\``)
-  .join(', ')}`
-            : ''
+            .data!.prakategorial.split(', ')
+            .map((text) => `\`${text}\``)
+            .join(', ')}`
+          : ''
         }
 `,
         this.createInlineKeyboard(
           // this.createReportButton(keyword),
-          this.createUrlButton(keyword)
-        )
+          this.createUrlButton(keyword),
+        ),
       )
     }
   }
@@ -173,10 +178,10 @@ ${result
       config.adminId,
       `@${sender} mengirim laporan bug baru
 Kata: \`${keyword}\``,
-      { parse_mode: 'Markdown' }
+      { parse_mode: 'Markdown' },
     )
     ctx.replyWithMarkdown(
-      `Laporan Anda mengenai kata *${keyword}* telah saya terima 😉`
+      `Laporan Anda mengenai kata *${keyword}* telah saya terima 😉`,
     )
   }
 }
@@ -193,7 +198,7 @@ bot.start((ctx) => app.sendStartMessage(ctx))
 
 bot.help((ctx) => app.sendHelpMessage(ctx))
 
-bot.on('text', (ctx) => {
+bot.on(message('text'), (ctx) => {
   const keyword = ctx.message.text
   app.main(ctx, keyword)
 })
@@ -202,16 +207,16 @@ bot.on('callback_query', (ctx) => app.reportBug(ctx))
 
 // launcher
 if (config.nodeEnv === 'development') {
-  bot.launch().then(() => console.log('Bot is running in development'))
+  console.log('Bot is running in development')
+  bot.launch()
 } else {
-  bot
-    .launch({
-      webhook: {
-        domain: config.botDomain,
-        port: config.port,
-      },
-    })
-    .then(() => console.log('Bot is running in production'))
+  console.log('Bot is running in production')
+  bot.launch({
+    webhook: {
+      domain: config.botDomain,
+      port: config.port,
+    },
+  })
   // bot.startWebhook(`/bot${botToken}`, null, port)
 }
 
