@@ -21,4 +21,4 @@ COPY --from=builder /src/drizzle /app/drizzle
 
 RUN bun i
 
-ENTRYPOINT [ "bun run /app/kbbi.js" ]
+ENTRYPOINT [ "bun", "run", "/app/kbbi.js" ]
