@@ -1,10 +1,8 @@
 // modules
 import { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
 import { Telegraf, Context, Markup } from 'telegraf'
-import { message } from 'telegraf/filters'
 import { isFuture, format } from 'date-fns'
 import { id } from 'date-fns/locale'
-import 'dotenv/config'
 
 // interfaces
 import { CallbackQuery } from './interfaces/callback-query.interface'
@@ -17,10 +15,17 @@ import config from './config/config'
 // classes
 import { Fetcher } from './Fetcher'
 import { Scraper } from './Scraper'
+import { User, users } from './db/postgres/schemas/user.schema'
+import { db } from './db/postgres'
+import { eq, sql } from 'drizzle-orm'
+
+interface MyContext extends Context {
+  user: User
+}
 
 // App class
-class App {
-  bot: Telegraf
+export default class App {
+  bot: Telegraf<MyContext>
   nodeEnv = process.env.NODE_ENV
   private result: IResult = {
     status: 0,
@@ -29,7 +34,7 @@ class App {
   }
 
   constructor(botToken: string) {
-    this.bot = new Telegraf(botToken)
+    this.bot = new Telegraf<MyContext>(botToken)
   }
 
   private sendMessage<T>(ctx: Context, message: string, inlineKb?: T) {
@@ -122,10 +127,10 @@ Akses Anda akan dipulihkan pada:
     }
   }
 
-  async main(ctx: Context, keyword: string) {
+  async main(ctx: MyContext, keyword: string) {
     const html = await this.fetchData(keyword)
     if (html === undefined) {
-      return app.sendMessage(
+      return this.sendMessage(
         ctx,
         `Terjadi kesalahan yang tidak terduga, silakan coba lagi`,
       )
@@ -134,7 +139,7 @@ Akses Anda akan dipulihkan pada:
     const result = this.getResult()
 
     if (result.status === 404) {
-      app.sendMessage(
+      this.sendMessage(
         ctx,
         `*${keyword}* ${result.message}, coba masukkan kata lain`,
       )
@@ -167,6 +172,11 @@ ${result
           this.createUrlButton(keyword),
         ),
       )
+
+      await db
+        .update(users)
+        .set({ credits: sql`${users.credits} - 1` })
+        .where(eq(users.id, ctx.user.id))
     }
   }
 
@@ -185,41 +195,3 @@ Kata: \`${keyword}\``,
     )
   }
 }
-
-// class instantiation
-const app = new App(config.botToken)
-const bot = app.bot
-
-// middleware
-bot.use(app.checkBlackList)
-
-// event handler
-bot.start((ctx) => app.sendStartMessage(ctx))
-
-bot.help((ctx) => app.sendHelpMessage(ctx))
-
-bot.on(message('text'), (ctx) => {
-  const keyword = ctx.message.text
-  app.main(ctx, keyword)
-})
-
-bot.on('callback_query', (ctx) => app.reportBug(ctx))
-
-// launcher
-if (config.nodeEnv === 'development') {
-  console.log('Bot is running in development')
-  bot.launch()
-} else {
-  console.log('Bot is running in production')
-  bot.launch({
-    webhook: {
-      domain: config.botDomain,
-      port: config.port,
-    },
-  })
-  // bot.startWebhook(`/bot${botToken}`, null, port)
-}
-
-// Enable graceful stop
-process.once('SIGINT', () => bot.stop('SIGINT'))
-process.once('SIGTERM', () => bot.stop('SIGTERM'))
