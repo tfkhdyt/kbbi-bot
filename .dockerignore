@@ -1,5 +1,4 @@
-# flyctl launch added from .gitignore
-**/node_modules
-**/dist
-**/.env
-fly.toml
+node_modules
+dist
+.env
+.env.production
