@@ -1,23 +1,18 @@
-// modules
-import { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
-import { Telegraf, Context, Markup } from 'telegraf'
-import { isFuture, format } from 'date-fns'
+import { format, isFuture } from 'date-fns'
 import { id } from 'date-fns/locale'
+import { eq, sql } from 'drizzle-orm'
+import { HttpsProxyAgent } from 'https-proxy-agent'
+import { Context, Markup, Telegraf } from 'telegraf'
+import { InlineKeyboardButton } from 'telegraf/types'
 
-// interfaces
-import { CallbackQuery } from './interfaces/callback-query.interface'
-import { IResult } from './interfaces/result.interface'
-
-// etc
-import { blackList } from './blacklist/blacklist'
-import config from './config/config'
-
-// classes
 import { Fetcher } from './Fetcher'
 import { Scraper } from './Scraper'
-import { User, users } from './db/postgres/schemas/user.schema'
+import { blackList } from './blacklist/blacklist'
+import config from './config/config'
 import { db } from './db/postgres'
-import { eq, sql } from 'drizzle-orm'
+import { User, users } from './db/postgres/schemas/user.schema'
+import { CallbackQuery } from './interfaces/callback-query.interface'
+import { IResult } from './interfaces/result.interface'
 
 interface MyContext extends Context {
   user: User
@@ -159,18 +154,17 @@ Akses Anda akan dipulihkan pada:
         }
 
 ${pengertian.join('\n\n')}${result.data!.prakategorial
-          ? `_Prakategorial: kata tidak dipakai dalam bentuk dasarnya_
-${result
+          ? `_Prakategorial:_ ${result
             .data!.prakategorial.split(', ')
             .map((text) => `\`${text}\``)
             .join(', ')}`
           : ''
         }
 `,
-        this.createInlineKeyboard(
-          // this.createReportButton(keyword),
-          this.createUrlButton(keyword),
-        ),
+        // this.createInlineKeyboard(
+        //   // this.createReportButton(keyword),
+        //   this.createUrlButton(keyword),
+        // ),
       )
 
       await db

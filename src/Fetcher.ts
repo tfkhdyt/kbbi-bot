@@ -1,3 +1,5 @@
+import config from './config/config'
+
 // fetcher class
 export class Fetcher {
   constructor(private keyword: string) { }
@@ -5,7 +7,8 @@ export class Fetcher {
   async getData() {
     try {
       const response = await fetch(
-        `https://kbbi.kemdikbud.go.id/entri/${this.keyword
+        `http://api.scraperapi.com?api_key=${config.scraperAPIKey
+        }&url=https://kbbi.kemdikbud.go.id/entri/${this.keyword
           .toLowerCase()
           .trim()}`,
       )
