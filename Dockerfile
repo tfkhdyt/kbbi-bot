@@ -19,6 +19,6 @@ COPY --from=builder /src/package.json /app/package.json
 COPY --from=builder /src/bun.lockb /app/bun.lockb
 COPY --from=builder /src/drizzle /app/drizzle
 
-RUN bun i
+RUN bun i -p
 
 ENTRYPOINT [ "bun", "run", "/app/kbbi.js" ]
