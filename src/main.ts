@@ -1,3 +1,5 @@
+import 'dotenv/config.js'
+
 import { eq } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
