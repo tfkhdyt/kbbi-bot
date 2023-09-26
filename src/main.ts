@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm'
-import { message } from 'telegraf/filters'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
+import { message } from 'telegraf/filters'
 
 import App from './app'
 import config from './config/config'
@@ -40,7 +40,7 @@ bot.start((ctx) => app.sendStartMessage(ctx))
 
 bot.help((ctx) => app.sendHelpMessage(ctx))
 
-bot.command('credits', async (ctx) => {
+bot.command('saldo', async (ctx) => {
   const userId = ctx.from.id
   if (!userId) return
 
