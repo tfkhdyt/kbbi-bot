@@ -9,7 +9,6 @@
     "format": "prettier -w ./src/",
     "lint": "tsc --noEmit && eslint --fix src/",
     "build": "tsc",
-    "start": "bun run ./src/main.ts",
     "generate": "drizzle-kit generate:pg",
     "push": "drizzle-kit push:pg"
   },
