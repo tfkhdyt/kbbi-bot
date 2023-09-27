@@ -1,10 +1,10 @@
-FROM node:lts-alpine3.18
-WORKDIR /app
+FROM oven/bun AS builder
+WORKDIR /src
 COPY . .
-# RUN npm i
-# RUN npm run generate
-# RUN npx tsx ./src/db/postgres/migrate.ts
-# RUN rm -rf node_modules
-RUN npm i --omit=dev
+RUN bun i
+RUN bun build --compile --outfile kbbi ./src/main.ts
 
-ENTRYPOINT [ "npx", "tsx", "./src/main.ts" ]
+FROM debian:unstable-slim
+WORKDIR /app
+COPY --from=builder /src/kbbi /app/kbbi
+ENTRYPOINT [ "/app/kbbi" ]
