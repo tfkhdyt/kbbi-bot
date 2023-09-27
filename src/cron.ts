@@ -1,5 +1,6 @@
 import { CronJob } from 'cron'
-import { resetFreeCredits } from './user.repository'
+
+import { resetFreeCredits } from './repositories/user.repository'
 
 export function startCron() {
   const job = new CronJob(
