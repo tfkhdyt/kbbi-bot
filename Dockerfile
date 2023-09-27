@@ -1,10 +1,13 @@
-FROM node:lts-alpine3.18
+FROM oven/bun
 
 WORKDIR /app
 
 COPY . .
 
-RUN npx pnpm i
-RUN npm run generate
+RUN bun i && \
+  bun run generate
 
-ENTRYPOINT [ "npm", "start" ]
+RUN rm -rf node_modules && \
+  bun i -p
+
+ENTRYPOINT [ "bun", "start" ]
