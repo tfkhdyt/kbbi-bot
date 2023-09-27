@@ -132,26 +132,23 @@ export default class App {
       const ejaan = `*${result.data!.ejaan.join(' ').toLowerCase()}*`
       const pengertian = result.data!.pengertian.map((value, index) => {
         // console.log(value)
-        return `${index + 1}. ${
-          value.jenisKata.length !== 0
+        return `${index + 1}. ${value.jenisKata.length !== 0
             ? '_' + value.jenisKata.join(', ') + '_\n'
             : ''
-        }\`${value.deskripsi}\``
+          }\`${value.deskripsi}\``
       })
 
       this.sendMessage(
         ctx,
-        `${ejaan} ${
-          result.data!.kataTidakBaku ? '\n' + result.data!.kataTidakBaku : ''
+        `${ejaan} ${result.data!.kataTidakBaku ? '\n' + result.data!.kataTidakBaku : ''
         }
 
-${pengertian.join('\n\n')}${
-          result.data!.prakategorial
-            ? `_Prakategorial:_ ${result
-                .data!.prakategorial.split(', ')
-                .map((text) => `\`${text}\``)
-                .join(', ')}`
-            : ''
+${pengertian.join('\n\n')}${result.data!.prakategorial
+          ? `. _Prakategorial:_ ${result
+            .data!.prakategorial.split(', ')
+            .map((text) => `\`${text}\``)
+            .join(', ')}`
+          : ''
         }
 `,
         // this.createInlineKeyboard(
