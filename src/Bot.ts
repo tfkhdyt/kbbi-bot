@@ -1,13 +1,12 @@
-import { eq, sql } from 'drizzle-orm'
 import { Context, Telegraf } from 'telegraf'
 
 import { Fetcher } from './Fetcher.js'
 import { Scraper } from './Scraper.js'
 import config from './config/config.js'
-import { db } from './db/postgres/index.js'
-import { User, users } from './db/postgres/schemas/user.schema.js'
+import { User } from './db/postgres/schemas/user.schema.js'
 import { CallbackQuery } from './interfaces/callback-query.interface.js'
 import { IResult } from './interfaces/result.interface.js'
+import { decreaseCredits } from './user.repository.js'
 
 interface MyContext extends Context {
   user: User
@@ -137,23 +136,26 @@ export default class App {
       const ejaan = `*${result.data!.ejaan.join(' ').toLowerCase()}*`
       const pengertian = result.data!.pengertian.map((value, index) => {
         // console.log(value)
-        return `${index + 1}. ${value.jenisKata.length !== 0
-          ? '_' + value.jenisKata.join(', ') + '_\n'
-          : ''
-          }\`${value.deskripsi}\``
+        return `${index + 1}. ${
+          value.jenisKata.length !== 0
+            ? '_' + value.jenisKata.join(', ') + '_\n'
+            : ''
+        }\`${value.deskripsi}\``
       })
 
       this.sendMessage(
         ctx,
-        `${ejaan} ${result.data!.kataTidakBaku ? '\n' + result.data!.kataTidakBaku : ''
+        `${ejaan} ${
+          result.data!.kataTidakBaku ? '\n' + result.data!.kataTidakBaku : ''
         }
 
-${pengertian.join('\n\n')}${result.data!.prakategorial
-          ? `_Prakategorial:_ ${result
-            .data!.prakategorial.split(', ')
-            .map((text) => `\`${text}\``)
-            .join(', ')}`
-          : ''
+${pengertian.join('\n\n')}${
+          result.data!.prakategorial
+            ? `_Prakategorial:_ ${result
+                .data!.prakategorial.split(', ')
+                .map((text) => `\`${text}\``)
+                .join(', ')}`
+            : ''
         }
 `,
         // this.createInlineKeyboard(
@@ -162,10 +164,7 @@ ${pengertian.join('\n\n')}${result.data!.prakategorial
         // ),
       )
 
-      await db
-        .update(users)
-        .set({ credits: sql`${users.credits} - 1` })
-        .where(eq(users.id, ctx.user.id))
+      await decreaseCredits(ctx.user.id)
     }
   }
 

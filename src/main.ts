@@ -1,12 +1,11 @@
 import { migrate } from 'drizzle-orm/libsql/migrator'
 
-import { eq } from 'drizzle-orm'
 import { message } from 'telegraf/filters'
 
 import Bot from './Bot.js'
 import config from './config/config.js'
 import { db } from './db/postgres/index.js'
-import { users } from './db/postgres/schemas/user.schema.js'
+import { addUser, findUserByID } from './user.repository.js'
 
 console.log('Running migration...')
 await migrate(db, { migrationsFolder: 'drizzle' })
@@ -19,11 +18,12 @@ bot.use(async (ctx, next) => {
   try {
     const userId = ctx.from?.id
     const username = ctx.from?.username
-    if (!userId || !username) return
+    if (!userId || !username)
+      throw new Error('User ID atau Username anda tidak valid')
 
-    const user = await db.select().from(users).where(eq(users.id, userId))
+    const user = await findUserByID(userId)
     if (user.length === 0) {
-      await db.insert(users).values({ id: userId, username })
+      await addUser({ id: userId, username })
     }
 
     ctx.user = user[0]
@@ -31,6 +31,7 @@ bot.use(async (ctx, next) => {
     await next()
   } catch (error) {
     console.error(error)
+    ctx.reply(`Terjadi error yang tak terduga!, ${error}`)
   }
 })
 
@@ -39,12 +40,14 @@ bot.start((ctx) => app.sendStartMessage(ctx))
 bot.help((ctx) => app.sendHelpMessage(ctx))
 
 bot.command('saldo', async (ctx) => {
-  const userId = ctx.from.id
-  if (!userId) return
+  try {
+    const user = ctx.user
 
-  const user = ctx.user
-
-  ctx.reply(`Jumlah saldo mu adalah: ${user.credits}`)
+    ctx.reply(`Jumlah saldo mu adalah: ${user.credits}`)
+  } catch (error) {
+    console.error(error)
+    ctx.reply(`Terjadi error yang tak terduga!, ${error}`)
+  }
 })
 
 bot.on(message('text'), async (ctx) => {
@@ -64,7 +67,6 @@ bot.on(message('text'), async (ctx) => {
 
 bot.on('callback_query', (ctx) => app.reportBug(ctx))
 
-// launcher
 if (config.nodeEnv === 'development') {
   console.log('Bot is running in development')
   bot.launch()
@@ -77,6 +79,3 @@ if (config.nodeEnv === 'development') {
     },
   })
 }
-
-process.once('SIGINT', () => bot.stop('SIGINT'))
-process.once('SIGTERM', () => bot.stop('SIGTERM'))
