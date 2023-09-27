@@ -3,14 +3,10 @@ import { Context, Telegraf } from 'telegraf'
 import { Fetcher } from './Fetcher.js'
 import { Scraper } from './Scraper.js'
 import config from './config/config.js'
-import { User } from './db/postgres/schemas/user.schema.js'
 import { CallbackQuery } from './interfaces/callback-query.interface.js'
+import { MyContext } from './interfaces/context.js'
 import { IResult } from './interfaces/result.interface.js'
 import { decreaseCredits } from './user.repository.js'
-
-interface MyContext extends Context {
-  user: User
-}
 
 // App class
 export default class App {
