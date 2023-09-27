@@ -16,7 +16,7 @@ interface MyContext extends Context {
 // App class
 export default class App {
   bot: Telegraf<MyContext>
-  nodeEnv = process.env.NODE_ENV
+  nodeEnv = config.nodeEnv
   private result: IResult = {
     status: 0,
     message: '',
@@ -138,8 +138,8 @@ export default class App {
       const pengertian = result.data!.pengertian.map((value, index) => {
         // console.log(value)
         return `${index + 1}. ${value.jenisKata.length !== 0
-            ? '_' + value.jenisKata.join(', ') + '_\n'
-            : ''
+          ? '_' + value.jenisKata.join(', ') + '_\n'
+          : ''
           }\`${value.deskripsi}\``
       })
 
