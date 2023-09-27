@@ -1,5 +1,5 @@
 import { MyContext } from '../interfaces/context'
-import { addUser, findUserByID } from '../user.repository'
+import { addUser, findUserByID } from '../repositories/user.repository'
 
 export const checkUserMiddleware = async (
   ctx: MyContext,
@@ -21,6 +21,6 @@ export const checkUserMiddleware = async (
     await next()
   } catch (error) {
     console.error(error)
-    ctx.reply(`Terjadi error yang tak terduga!, ${error}`)
+    await ctx.reply(`Terjadi error yang tak terduga!, ${error}`)
   }
 }

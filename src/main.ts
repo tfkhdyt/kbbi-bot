@@ -3,7 +3,7 @@ import { message } from 'telegraf/filters'
 import Bot from './Bot.js'
 import config from './config/config.js'
 import { startCron } from './cron.js'
-import { saldoHandler } from './handlers/saldoHandler.js'
+import { saldoHandler } from './handlers/saldo.handler.js'
 import { checkUserMiddleware } from './middlewares/user.middleware.js'
 
 startCron()
@@ -31,14 +31,14 @@ bot.on(message('text'), async (ctx) => {
   }
 })
 
-bot.on('callback_query', (ctx) => app.reportBug(ctx))
+// bot.on('callback_query', (ctx) => app.reportBug(ctx))
 
 if (config.nodeEnv === 'development') {
   console.log('Bot is running in development')
-  bot.launch()
+  await bot.launch()
 } else {
   console.log('Bot is running in production')
-  bot.launch({
+  await bot.launch({
     webhook: {
       domain: config.botDomain,
       port: config.port,
