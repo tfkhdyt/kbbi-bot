@@ -13,6 +13,7 @@ export type DB = typeof db
 
 export async function startMigration() {
   console.log('Running migration...')
-  await migrate(db, { migrationsFolder: 'drizzle' })
+  await migrate(db, { migrationsFolder: './drizzle' })
   console.log('Migrations is done')
 }
+

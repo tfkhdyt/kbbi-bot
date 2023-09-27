@@ -3,11 +3,9 @@ import { message } from 'telegraf/filters'
 import Bot from './Bot.js'
 import config from './config/config.js'
 import { startCron } from './cron.js'
-import { startMigration } from './db/postgres/index.js'
 import { saldoHandler } from './handlers/saldoHandler.js'
 import { checkUserMiddleware } from './middlewares/user.middleware.js'
 
-startMigration()
 startCron()
 
 const app = new Bot(config.botToken)
