@@ -1,10 +1,10 @@
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
+import config from '../../config/config'
 
-const POSTGRES_URL = process.env.POSTGRES_URL as string
 
-export const migrationClient = postgres(POSTGRES_URL, { max: 1 })
-const queryClient = postgres(POSTGRES_URL)
+export const migrationClient = postgres(config.postgresURL, { max: 1 })
+const queryClient = postgres(config.postgresURL)
 
 export const db = drizzle(queryClient)
 export type DB = typeof db
