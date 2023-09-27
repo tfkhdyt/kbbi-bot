@@ -166,19 +166,19 @@ ${pengertian.join('\n\n')}${
     await decreaseCredits(ctx.user.id)
   }
 
-//   reportBug(ctx: Context) {
-//     const keyword = (ctx.callbackQuery as CallbackQuery).data.split('_')[1]
-//     const sender = ctx.callbackQuery?.from.username
+  //   reportBug(ctx: Context) {
+  //     const keyword = (ctx.callbackQuery as CallbackQuery).data.split('_')[1]
+  //     const sender = ctx.callbackQuery?.from.username
 
-//     ctx.deleteMessage(ctx.callbackQuery?.message?.message_id)
-//     this.bot.telegram.sendMessage(
-//       config.adminId,
-//       `@${sender} mengirim laporan bug baru
-// Kata: \`${keyword}\``,
-//       { parse_mode: 'Markdown' },
-//     )
-//     ctx.replyWithMarkdown(
-//       `Laporan Anda mengenai kata *${keyword}* telah saya terima 😉`,
-//     )
-//   }
+  //     ctx.deleteMessage(ctx.callbackQuery?.message?.message_id)
+  //     this.bot.telegram.sendMessage(
+  //       config.adminId,
+  //       `@${sender} mengirim laporan bug baru
+  // Kata: \`${keyword}\``,
+  //       { parse_mode: 'Markdown' },
+  //     )
+  //     ctx.replyWithMarkdown(
+  //       `Laporan Anda mengenai kata *${keyword}* telah saya terima 😉`,
+  //     )
+  //   }
 }

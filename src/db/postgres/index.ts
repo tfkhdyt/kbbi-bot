@@ -16,4 +16,3 @@ export async function startMigration() {
   await migrate(db, { migrationsFolder: './drizzle' })
   console.log('Migrations is done')
 }
-
