@@ -10,4 +10,4 @@ RUN npm i && \
 RUN rm -rf node_modules && \
   npm i --production
 
-ENTRYPOINT [ "npm", "start" ]
+ENTRYPOINT [ "npx", "tsx", "./src/main.ts" ]
