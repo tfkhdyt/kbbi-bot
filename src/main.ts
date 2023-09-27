@@ -3,18 +3,16 @@ import { drizzle } from 'drizzle-orm/postgres-js'
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
 import { message } from 'telegraf/filters'
 
-import App from './app.js'
+import Bot from './Bot.js'
 import config from './config/config.js'
 import { db, migrationClient } from './db/postgres/index.js'
 import { users } from './db/postgres/schemas/user.schema.js'
 
 await migrate(drizzle(migrationClient), { migrationsFolder: './drizzle' })
 
-// class instantiation
-const app = new App(config.botToken)
+const app = new Bot(config.botToken)
 const bot = app.bot
 
-// middleware
 bot.use(async (ctx, next) => {
   try {
     const userId = ctx.from?.id
@@ -34,7 +32,6 @@ bot.use(async (ctx, next) => {
   }
 })
 
-// event handler
 bot.start((ctx) => app.sendStartMessage(ctx))
 
 bot.help((ctx) => app.sendHelpMessage(ctx))
@@ -77,9 +74,7 @@ if (config.nodeEnv === 'development') {
       port: config.port,
     },
   })
-  // bot.startWebhook(`/bot${botToken}`, null, port)
 }
 
-// Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'))
 process.once('SIGTERM', () => bot.stop('SIGTERM'))
