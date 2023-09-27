@@ -11,11 +11,11 @@ startCron()
 const app = new Bot(config.botToken)
 const bot = app.bot
 
-bot.use(checkUserMiddleware)
 bot.start((ctx) => app.sendStartMessage(ctx))
 bot.help((ctx) => app.sendHelpMessage(ctx))
-bot.command('saldo', saldoHandler)
 
+bot.use(checkUserMiddleware)
+bot.command('saldo', saldoHandler)
 bot.on(message('text'), async (ctx) => {
   try {
     if (ctx.user.credits === 0) {
