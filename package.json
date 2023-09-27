@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "bun run --watch ./src/main.ts",
-    "format": "prettier -w ./src/",
-    "lint": "tsc --noEmit && eslint --fix src/",
+    "format": "prettier -w ./src",
+    "lint": "tsc --noEmit && eslint --fix ./src",
     "build": "tsc",
     "generate": "drizzle-kit generate:sqlite",
     "migrate": "bun run ./src/db/postgres/migrate.ts",

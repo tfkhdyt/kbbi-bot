@@ -1,0 +1,14 @@
+pre-push:
+  parallel: true
+  commands:
+    lint:
+      glob: '**/*.ts'
+      run: bun run lint
+    taze:
+      run: bunx taze --failOnOutdated
+
+pre-commit:
+  commands:
+    format:
+      glob: '**/*.ts'
+      run: bun run format
