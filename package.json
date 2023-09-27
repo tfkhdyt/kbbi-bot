@@ -10,16 +10,21 @@
     "lint": "tsc --noEmit && eslint --fix src/",
     "build": "tsc",
     "generate": "drizzle-kit generate:sqlite",
+    "migrate": "bun run ./src/db/postgres/migrate.ts",
     "studio": "bunx drizzle-kit studio"
   },
-  "keywords": ["Dictionary", "Indonesia", "Bot", "Telegram"],
+  "keywords": [
+    "Dictionary",
+    "Indonesia",
+    "Bot",
+    "Telegram"
+  ],
   "author": "tfkhdyt",
   "license": "ISC",
   "dependencies": {
     "@libsql/client": "^0.3.5",
     "cheerio": "1.0.0-rc.12",
     "cron": "^2.4.4",
-    "dotenv": "^16.3.1",
     "drizzle-orm": "^0.28.6",
     "postgres": "^3.3.5",
     "telegraf": "^4.14.0"
