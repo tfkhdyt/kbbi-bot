@@ -1,60 +1,28 @@
-import { migrate } from 'drizzle-orm/libsql/migrator'
-
 import { message } from 'telegraf/filters'
 
 import Bot from './Bot.js'
 import config from './config/config.js'
-import { db } from './db/postgres/index.js'
-import { addUser, findUserByID } from './user.repository.js'
+import { startCron } from './cron.js'
+import { startMigration } from './db/postgres/index.js'
+import { saldoHandler } from './handlers/saldoHandler.js'
+import { checkUserMiddleware } from './middlewares/user.middleware.js'
 
-console.log('Running migration...')
-await migrate(db, { migrationsFolder: 'drizzle' })
-console.log('Migrations is done')
+startMigration()
+startCron()
 
 const app = new Bot(config.botToken)
 const bot = app.bot
 
-bot.use(async (ctx, next) => {
-  try {
-    const userId = ctx.from?.id
-    const username = ctx.from?.username
-    if (!userId || !username)
-      throw new Error('User ID atau Username anda tidak valid')
-
-    const user = await findUserByID(userId)
-    if (user.length === 0) {
-      await addUser({ id: userId, username })
-    }
-
-    ctx.user = user[0]
-
-    await next()
-  } catch (error) {
-    console.error(error)
-    ctx.reply(`Terjadi error yang tak terduga!, ${error}`)
-  }
-})
-
+bot.use(checkUserMiddleware)
 bot.start((ctx) => app.sendStartMessage(ctx))
-
 bot.help((ctx) => app.sendHelpMessage(ctx))
-
-bot.command('saldo', async (ctx) => {
-  try {
-    const user = ctx.user
-
-    ctx.reply(`Jumlah saldo mu adalah: ${user.credits}`)
-  } catch (error) {
-    console.error(error)
-    ctx.reply(`Terjadi error yang tak terduga!, ${error}`)
-  }
-})
+bot.command('saldo', saldoHandler)
 
 bot.on(message('text'), async (ctx) => {
   try {
     if (ctx.user.credits === 0) {
       return ctx.reply(
-        'Maaf, saldo anda tidak cukup, silakan isi ulang atau tunggu besok hari',
+        'Maaf, saldo anda tidak mencukupi, silakan isi ulang atau tunggu esok hari. Saldo gratis harian akan di-reset setiap jam 00:00',
       )
     }
 

@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm'
+import { eq, lt, sql } from 'drizzle-orm'
 import { db } from './db/postgres'
 import { NewUser, users } from './db/postgres/schemas/user.schema'
 
@@ -12,3 +12,6 @@ export const decreaseCredits = (userId: number) =>
     .update(users)
     .set({ credits: sql`${users.credits} - 1` })
     .where(eq(users.id, userId))
+
+export const resetFreeCredits = () =>
+  db.update(users).set({ credits: 3 }).where(lt(users.credits, 3))
