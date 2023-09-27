@@ -8,7 +8,7 @@ import config from './config/config.js'
 import { db, migrationClient } from './db/postgres/index.js'
 import { users } from './db/postgres/schemas/user.schema.js'
 
-await migrate(drizzle(migrationClient), { migrationsFolder: '../drizzle' })
+await migrate(drizzle(migrationClient), { migrationsFolder: './drizzle' })
 
 // class instantiation
 const app = new App(config.botToken)
