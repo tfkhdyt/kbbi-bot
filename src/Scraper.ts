@@ -1,11 +1,7 @@
-// module
-import { load, CheerioAPI } from 'cheerio'
-// import pretty from 'pretty'
+import { CheerioAPI, load } from 'cheerio'
 
-// interface
 import { IPengertian } from './interfaces/result.interface.js'
 
-// scraper class
 export class Scraper {
   private ejaan: string[] = []
   private kataTidakBaku?: string = undefined
@@ -34,11 +30,9 @@ export class Scraper {
     )
       .next()
       .text() as string
-    // console.log('prakategorial: ', this.prakategorial)
 
     this.$('h2').each((_, element) => {
       const hasil = this.$(element)
-      // console.log(hasil.html())
 
       // get kata baku
       this.kataTidakBaku ??= hasil.find('small').text().replace(/[0-9]/g, '')
@@ -46,7 +40,6 @@ export class Scraper {
       // get ejaan
       hasil.find('small').remove()
       this.ejaan = hasil
-        // .remove('small')
         .text()
         .split(' ')
         .filter(Boolean)
@@ -54,10 +47,7 @@ export class Scraper {
 
       // get pengertian
       hasil
-        /* .next()
-        .next() */
         .siblings('ul.adjusted-par,ol')
-        // .first()
         .children()
         .each((_, el) => {
           const info: IPengertian = {
@@ -65,24 +55,11 @@ export class Scraper {
             deskripsi: '',
           }
 
-          // console.log(this.$(el).html())
-          // const rawInfo = this.$(el).text().split('  ').filter(Boolean)
-          // info.jenisKata = rawInfo[0].split(' ').filter(Boolean)
-
           // get jenis kata
           info.jenisKata = this.$(el)
             .find('font[color=red] span')
             .map((_, el) => this.$(el).attr('title'))
             .toArray()
-
-          // console.log(this.$(el).text())
-
-          /* if (rawInfo[1].length < 5) {
-            info.deskripsi = rawInfo.slice(2).join(' ').trim()
-            info.jenisKata.push(rawInfo[1])
-          } else {
-            info.deskripsi = rawInfo.slice(1).join(' ').trim()
-          }*/
 
           // get deskripsi
           this.$(el).find('font[color=red]').remove()
