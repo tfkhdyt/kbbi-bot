@@ -1,8 +1,8 @@
-import { integer, pgTable, varchar } from 'drizzle-orm/pg-core'
+import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
-export const users = pgTable('users', {
+export const users = sqliteTable('users', {
   id: integer('id').primaryKey(),
-  username: varchar('username', { length: 50 }).notNull(),
+  username: text('username', { length: 50 }).notNull(),
   credits: integer('credits').default(3),
 })
 

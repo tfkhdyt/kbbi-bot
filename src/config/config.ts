@@ -5,7 +5,8 @@ export default {
   nodeEnv: process.env.NODE_ENV as string,
   adminId: process.env.ADMIN_ID as string,
   scraperAPIKey: process.env.SCRAPER_API_KEY as string,
-  postgresURL: process.env.POSTGRES_URL as string,
+  databaseUrl: process.env.DATABASE_URL as string,
+  databaseAuthToken: process.env.DATABASE_AUTH_TOKEN as string,
   message: {
     start: `Selamat datang di bot *KBBI*
 

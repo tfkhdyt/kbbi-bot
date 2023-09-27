@@ -1,13 +1,12 @@
-FROM node:lts-alpine3.18
+FROM node
 
 WORKDIR /app
 
 COPY . .
 
 RUN npm i && \
-  npm run generate
-
-RUN rm -rf node_modules && \
+  npm run generate && \
+  rm -rf node_modules && \
   npm i --production
 
 ENTRYPOINT [ "npx", "tsx", "./src/main.ts" ]

@@ -1,19 +1,12 @@
 {
   "version": "5",
-  "dialect": "pg",
+  "dialect": "sqlite",
   "entries": [
     {
       "idx": 0,
       "version": "5",
-      "when": 1695709687683,
-      "tag": "0000_steep_jack_power",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1695709743386,
-      "tag": "0001_green_major_mapleleaf",
+      "when": 1695787466171,
+      "tag": "0000_foamy_shinko_yamashiro",
       "breakpoints": true
     }
   ]

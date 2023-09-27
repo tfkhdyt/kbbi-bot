@@ -1,14 +1,16 @@
+import { migrate } from 'drizzle-orm/libsql/migrator'
+
 import { eq } from 'drizzle-orm'
-import { drizzle } from 'drizzle-orm/postgres-js'
-import { migrate } from 'drizzle-orm/postgres-js/migrator'
 import { message } from 'telegraf/filters'
 
 import Bot from './Bot.js'
 import config from './config/config.js'
-import { db, migrationClient } from './db/postgres/index.js'
+import { db } from './db/postgres/index.js'
 import { users } from './db/postgres/schemas/user.schema.js'
 
-await migrate(drizzle(migrationClient), { migrationsFolder: './drizzle' })
+console.log('Running migration...')
+await migrate(db, { migrationsFolder: 'drizzle' })
+console.log('Migrations is done')
 
 const app = new Bot(config.botToken)
 const bot = app.bot
