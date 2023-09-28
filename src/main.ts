@@ -8,7 +8,9 @@ import { startCron } from './cron.js'
 import { saldoHandler } from './handlers/saldo.handler.js'
 import { PaymentBody } from './interfaces/paymentBody.js'
 import { checkUserMiddleware } from './middlewares/user.middleware.js'
+import { calculatePrice } from './payments/xendit/calculatePrice.js'
 import { createInvoice } from './payments/xendit/createInvoice.js'
+import { formatCurrency } from './payments/xendit/formatCurrency.js'
 import { increaseCredits } from './repositories/user.repository.js'
 
 startCron()
@@ -24,8 +26,6 @@ server.post<{ Body: PaymentBody }>('/receive_callback', async (req, reply) => {
     if (body.status !== 'PAID') {
       return reply.status(200).send()
     }
-
-    console.log(body)
 
     const userId = Number(body.external_id.split('_')[1])
     const amount = body.items[0].quantity
@@ -50,16 +50,36 @@ bot.use(checkUserMiddleware)
 bot.command('saldo', saldoHandler)
 bot.command('topup', async (ctx) => {
   try {
-    const messages = ctx.message.text.split(' ')
-    if (messages.length !== 2) {
-      throw new Error('Input tidak valid')
+    const nominalButton = (amount: number) => {
+      return Markup.button.callback(
+        `${amount} (${formatCurrency(calculatePrice(amount).gross)})`,
+        `topup:${amount}`,
+      )
     }
-    const amount = Number(messages[1])
 
-    const invoiceUrl = await createInvoice(amount, ctx.user)
+    const nominalTopup = Markup.inlineKeyboard([
+      [nominalButton(5), nominalButton(10)],
+      [nominalButton(15), nominalButton(20)],
+      [nominalButton(25), nominalButton(50)],
+    ])
 
+    await ctx.reply('Silakan pilih nominal topup anda', nominalTopup)
+  } catch (error) {
+    console.error(error)
+    if (error instanceof Error) await ctx.reply(error.message)
+  }
+})
+bot.action(/^topup:([A-z0-9]+)$/, async (ctx) => {
+  try {
+    await ctx.deleteMessage(ctx.update.callback_query.message?.message_id)
+
+    const nominal = Number(ctx.match[1])
+    const invoiceUrl = await createInvoice(nominal, ctx.user)
     const keyboard = Markup.inlineKeyboard([
-      Markup.button.url('🧾 Xendit Payment', invoiceUrl),
+      Markup.button.webApp(
+        `🧾 Xendit Payment (${formatCurrency(calculatePrice(nominal).gross)})`,
+        invoiceUrl,
+      ),
     ])
 
     await ctx.reply(
@@ -71,6 +91,7 @@ bot.command('topup', async (ctx) => {
     if (error instanceof Error) await ctx.reply(error.message)
   }
 })
+
 bot.on(message('text'), async (ctx) => {
   try {
     if (ctx.user.credits === 0) {

@@ -1,16 +1,15 @@
 import { CreateInvoiceRequest, Invoice } from 'xendit-node/invoice/models'
 
 import { User } from '../../db/postgres/schemas/user.schema'
+import { calculatePrice } from './calculatePrice'
 import { xenditClient } from './client'
 
 export const createInvoice = async (amount: number, user: User) => {
-  const netPrice = amount * 1000
-  const adminFee = netPrice * 0.2
-  const grossPrice = netPrice + adminFee
+  const price = calculatePrice(amount)
 
   const invoice: CreateInvoiceRequest = {
     externalId: `topup_${user.id}_${crypto.randomUUID()}`,
-    amount: grossPrice,
+    amount: price.gross,
     currency: 'IDR',
     customer: {
       givenNames: user.firstName,
@@ -26,7 +25,7 @@ export const createInvoice = async (amount: number, user: User) => {
     fees: [
       {
         type: 'Biaya Admin',
-        value: adminFee,
+        value: price.adminFee,
       },
     ],
   }
