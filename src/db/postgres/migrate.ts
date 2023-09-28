@@ -6,7 +6,8 @@ import config from '../../config/config'
 
 const client = createClient({
   url: config.databaseUrl,
-  authToken: config.databaseAuthToken,
+  authToken:
+    config.nodeEnv === 'production' ? config.databaseAuthToken : undefined,
 })
 const db = drizzle(client)
 
