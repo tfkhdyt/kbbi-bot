@@ -7,7 +7,7 @@ export const findUserByID = async (id: number) =>
   await db.select().from(users).where(eq(users.id, id))
 
 export const addUser = async (user: NewUser) =>
-  await db.insert(users).values(user)
+  await db.insert(users).values(user).returning()
 
 export const decreaseCredits = async (userId: number) =>
   await db

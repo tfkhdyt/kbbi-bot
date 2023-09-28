@@ -11,9 +11,9 @@ export const checkUserMiddleware = async (
     if (!userId || !username)
       throw new Error('User ID atau Username anda tidak valid')
 
-    const user = await findUserByID(userId)
+    let user = await findUserByID(userId)
     if (user.length === 0) {
-      await addUser({ id: userId, username })
+      user = await addUser({ id: userId, username })
     }
 
     ctx.user = user[0]
