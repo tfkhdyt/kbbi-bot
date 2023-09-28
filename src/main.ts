@@ -1,6 +1,7 @@
 import { message } from 'telegraf/filters'
 
 import fastify from 'fastify'
+import { Markup } from 'telegraf'
 import Bot from './Bot.js'
 import config from './config/config.js'
 import { startCron } from './cron.js'
@@ -57,8 +58,13 @@ bot.command('topup', async (ctx) => {
 
     const invoiceUrl = await createInvoice(amount, ctx.user)
 
+    const keyboard = Markup.inlineKeyboard([
+      Markup.button.url('🧾 Xendit Payment', invoiceUrl),
+    ])
+
     await ctx.reply(
-      `Silakan lanjutkan pembayaran melalui URL berikut ini: ${invoiceUrl}`,
+      'Silakan lanjutkan pembayaran dengan menekan tombol di bawah ini',
+      keyboard,
     )
   } catch (error) {
     console.error(error)
