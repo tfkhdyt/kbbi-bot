@@ -7,6 +7,7 @@ export default {
   scraperAPIKey: process.env.SCRAPER_API_KEY as string,
   databaseUrl: process.env.DATABASE_URL as string,
   databaseAuthToken: process.env.DATABASE_AUTH_TOKEN as string,
+  xenditSecret: process.env.XENDIT_SECRET as string,
   message: {
     start: `Selamat datang di bot *KBBI*
 
