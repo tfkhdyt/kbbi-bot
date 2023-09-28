@@ -28,7 +28,8 @@
     "drizzle-orm": "^0.28.6",
     "fastify": "^4.23.2",
     "postgres": "^3.3.5",
-    "telegraf": "^4.14.0"
+    "telegraf": "^4.14.0",
+    "xendit-node": "^3.2.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.7.3",

@@ -1,17 +1,19 @@
-import config from '../../config/config'
+import { CreateInvoiceRequest, Invoice } from 'xendit-node/invoice/models'
+
 import { User } from '../../db/postgres/schemas/user.schema'
+import { xenditClient } from './client'
 
 export const createInvoice = async (amount: number, user: User) => {
   const netPrice = amount * 1000
   const adminFee = netPrice * 0.2
   const grossPrice = netPrice + adminFee
 
-  const invoice = {
-    external_id: `payment_${user.id}_${crypto.randomUUID()}`,
+  const invoice: CreateInvoiceRequest = {
+    externalId: `topup_${user.id}_${crypto.randomUUID()}`,
     amount: grossPrice,
     currency: 'IDR',
     customer: {
-      given_names: user.firstName,
+      givenNames: user.firstName,
       surname: user.lastName,
     },
     items: [
@@ -29,21 +31,27 @@ export const createInvoice = async (amount: number, user: User) => {
     ],
   }
 
-  const authToken = Buffer.from(config.xenditSecret + ':').toString('base64')
-
-  const response = await fetch('https://api.xendit.co/v2/invoices', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Basic ${authToken}`,
-    },
-    body: JSON.stringify(invoice),
+  const response: Invoice = await xenditClient.Invoice.createInvoice({
+    data: invoice,
   })
-  const data = await response.json()
-  if (!response.ok) {
-    console.error(data.errors)
-    throw new Error('Terjadi kesalahan saat membuat invoice')
-  }
 
-  return data.invoice_url as string
+  return response.invoiceUrl
+
+  // const authToken = Buffer.from(config.xenditSecret + ':').toString('base64')
+  //
+  // const response = await fetch('https://api.xendit.co/v2/invoices', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     Authorization: `Basic ${authToken}`,
+  //   },
+  //   body: JSON.stringify(invoice),
+  // })
+  // const data = await response.json()
+  // if (!response.ok) {
+  //   console.error(data.errors)
+  //   throw new Error('Terjadi kesalahan saat membuat invoice')
+  // }
+  //
+  // return data.invoice_url as string
 }
