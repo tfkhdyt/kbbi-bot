@@ -5,6 +5,7 @@ import Bot from './Bot.js'
 import config from './config/config.js'
 import { startCron } from './cron.js'
 import { saldoHandler } from './handlers/saldo.handler.js'
+import { PaymentBody } from './interfaces/paymentBody.js'
 import { checkUserMiddleware } from './middlewares/user.middleware.js'
 import { createInvoice } from './payments/xendit/createInvoice.js'
 import { increaseCredits } from './repositories/user.repository.js'
@@ -14,17 +15,6 @@ startCron()
 const app = new Bot(config.botToken)
 const bot = app.bot
 const server = fastify()
-
-type PaymentBody = {
-  status: string
-  id: string
-  external_id: string
-  items: [
-    {
-      quantity: number
-    },
-  ]
-}
 
 server.get('/', () => 'Hello')
 server.post<{ Body: PaymentBody }>('/receive_callback', async (req, reply) => {
@@ -38,11 +28,12 @@ server.post<{ Body: PaymentBody }>('/receive_callback', async (req, reply) => {
 
     const userId = Number(body.external_id.split('_')[1])
     const amount = body.items[0].quantity
+    const paymentChannel = body.payment_channel
 
     await increaseCredits(userId, amount)
     await bot.telegram.sendMessage(
       userId,
-      `Topup sejumlah ${amount} saldo telah berhasil! Terima kasih telah menggunakan layanan kami`,
+      `Topup sejumlah ${amount} saldo melalui ${paymentChannel} telah berhasil! Terima kasih telah menggunakan layanan kami`,
     )
 
     reply.status(200).send()
@@ -67,7 +58,7 @@ bot.command('topup', async (ctx) => {
     const invoiceUrl = await createInvoice(amount, ctx.user)
 
     await ctx.reply(
-      `Silakan lakukan pembayaran melalui URL berikut ini: ${invoiceUrl}`,
+      `Silakan lanjutkan pembayaran melalui URL berikut ini: ${invoiceUrl}`,
     )
   } catch (error) {
     console.error(error)
@@ -89,12 +80,12 @@ bot.on(message('text'), async (ctx) => {
   }
 })
 
-// bot.on('callback_query', (ctx) => app.reportBug(ctx))
-await server.listen({ port: Number(config.port) + 1 })
-console.log(`Server listening on port ${Number(config.port) + 1}`)
-
 if (config.nodeEnv === 'production') {
   console.log('Bot is running in production')
+  const webhook = await bot.createWebhook({ domain: config.botDomain })
+  // @ts-ignore
+  server.post(`/telegraf/${bot.secretPathComponent()}`, webhook)
+  await server.listen({ port: config.port })
   await bot.launch({
     webhook: {
       domain: config.botDomain,
@@ -103,5 +94,6 @@ if (config.nodeEnv === 'production') {
   })
 } else {
   console.log('Bot is running in development')
+  await server.listen({ port: Number(config.port) })
   await bot.launch()
 }
