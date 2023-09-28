@@ -33,10 +33,7 @@ bot.on(message('text'), async (ctx) => {
 
 // bot.on('callback_query', (ctx) => app.reportBug(ctx))
 
-if (config.nodeEnv === 'development') {
-  console.log('Bot is running in development')
-  await bot.launch()
-} else {
+if (config.nodeEnv === 'production') {
   console.log('Bot is running in production')
   await bot.launch({
     webhook: {
@@ -44,4 +41,7 @@ if (config.nodeEnv === 'development') {
       port: config.port,
     },
   })
+} else {
+  console.log('Bot is running in development')
+  await bot.launch()
 }
