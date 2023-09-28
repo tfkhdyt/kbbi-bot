@@ -1,13 +1,17 @@
 import { eq, lt, sql } from 'drizzle-orm'
+import { NewUser } from './../db/postgres/schemas/user.schema'
 
 import { db } from '../db/postgres'
-import { NewUser, users } from '../db/postgres/schemas/user.schema'
+import { users } from '../db/postgres/schemas/user.schema'
 
 export const findUserByID = async (id: number) =>
   await db.select().from(users).where(eq(users.id, id))
 
 export const addUser = async (user: NewUser) =>
   await db.insert(users).values(user).returning()
+
+export const updateUser = async (id: number, user: NewUser) =>
+  await db.update(users).set(user).where(eq(users.id, id)).returning()
 
 export const decreaseCredits = async (userId: number) =>
   await db

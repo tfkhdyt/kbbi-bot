@@ -1,22 +1,49 @@
 import { MyContext } from '../interfaces/context'
-import { addUser, findUserByID } from '../repositories/user.repository'
+import {
+  addUser,
+  findUserByID,
+  updateUser,
+} from '../repositories/user.repository'
 
 export const checkUserMiddleware = async (
   ctx: MyContext,
   next: () => Promise<void>,
 ) => {
   try {
-    const userId = ctx.from?.id
-    const username = ctx.from?.username
-    if (!userId || !username)
+    const user = ctx.from
+    if (!user) {
       throw new Error('User ID atau Username anda tidak valid')
+    }
+    const { id, username, first_name: firstName, last_name: lastName } = user
 
-    let user = await findUserByID(userId)
-    if (user.length === 0) {
-      user = await addUser({ id: userId, username })
+    let userData = await findUserByID(id)
+    if (userData.length === 0) {
+      userData = await addUser({ id, username, firstName, lastName })
+    } else {
+      const {
+        username: usernameDb,
+        firstName: firstNameDb,
+        lastName: lastNameDb,
+      } = userData[0]
+
+      if (
+        usernameDb !== username ||
+        firstNameDb !== firstName ||
+        lastNameDb !== lastName
+      ) {
+        const updatedUser = await updateUser(id, {
+          username,
+          firstName,
+          lastName,
+        })
+        if (updatedUser.length === 0) {
+          throw new Error('Gagal untuk memperbarui akun')
+        }
+        userData = updatedUser
+      }
     }
 
-    ctx.user = user[0]
+    ctx.user = userData[0]
 
     await next()
   } catch (error) {
