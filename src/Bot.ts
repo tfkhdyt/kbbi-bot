@@ -66,6 +66,11 @@ export default class App {
       }
     } catch (error) {
       console.error(error)
+      this.result = {
+        status: 404,
+        message: 'tidak ditemukan',
+        data: null,
+      }
     }
   }
 
