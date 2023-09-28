@@ -11,7 +11,7 @@
     "build": "tsc",
     "generate": "drizzle-kit generate:sqlite",
     "migrate": "bun run ./src/db/postgres/migrate.ts",
-    "studio": "bunx drizzle-kit studio"
+    "studio": "bunx --bun drizzle-kit studio"
   },
   "keywords": [
     "Dictionary",
