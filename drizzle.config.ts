@@ -7,6 +7,7 @@ export default {
   driver: 'turso',
   dbCredentials: {
     url: config.databaseUrl,
-    authToken: config.databaseAuthToken,
+    authToken:
+      config.nodeEnv === 'production' ? config.databaseAuthToken : undefined,
   },
 } satisfies Config
