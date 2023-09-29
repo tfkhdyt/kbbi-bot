@@ -1,8 +1,15 @@
 import { CreateInvoiceRequest, Invoice } from 'xendit-node/invoice/models'
 
-import { User } from '../../db/postgres/schemas/user.schema'
-import { calculatePrice } from './calculatePrice'
-import { xenditClient } from './client'
+import { User } from '../db/postgres/schemas/user.schema'
+import { xenditClient } from '../lib/xendit'
+
+export const calculatePrice = (amount: number) => {
+  const net = amount * 1000
+  const adminFee = net * 0.2
+  const gross = net + adminFee
+
+  return { net, adminFee, gross }
+}
 
 export const createInvoice = async (amount: number, user: User) => {
   const price = calculatePrice(amount)
@@ -54,3 +61,10 @@ export const createInvoice = async (amount: number, user: User) => {
   //
   // return data.invoice_url as string
 }
+
+const formatter = new Intl.NumberFormat('id-ID', {
+  style: 'currency',
+  currency: 'IDR',
+})
+
+export const formatCurrency = (value: number) => formatter.format(value)

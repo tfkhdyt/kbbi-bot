@@ -1,9 +1,9 @@
-import { MyContext } from '../interfaces/context'
 import {
   addUser,
   findUserByID,
   updateUser,
 } from '../repositories/user.repository'
+import { MyContext } from '../types/context'
 
 export const checkUserMiddleware = async (
   ctx: MyContext,

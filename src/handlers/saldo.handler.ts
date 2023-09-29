@@ -1,10 +1,10 @@
-import { MyContext } from '../interfaces/context'
+import { MyContext } from '../types/context'
 
 export const saldoHandler = async (ctx: MyContext) => {
   try {
-    const user = ctx.user
+    const { user } = ctx
 
-    await ctx.reply(`Jumlah saldo mu adalah: ${user.credits}`)
+    await ctx.reply(`Sisa saldo mu adalah: ${user.credits}`)
   } catch (error) {
     console.error(error)
     await ctx.reply(`Terjadi error yang tak terduga!, ${error}`)
