@@ -1,8 +1,9 @@
 import type { Config } from 'drizzle-kit'
+
 import config from './src/config/config'
 
 export default {
-  schema: './src/db/postgres/schemas/*',
+  schema: './src/db/sqlite/schemas/*',
   out: './drizzle',
   driver: 'turso',
   dbCredentials: {

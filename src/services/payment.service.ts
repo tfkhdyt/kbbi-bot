@@ -1,6 +1,6 @@
 import { CreateInvoiceRequest, Invoice } from 'xendit-node/invoice/models'
 
-import { User } from '../db/postgres/schemas/user.schema'
+import { User } from '../db/sqlite/schemas/user.schema'
 import { xenditClient } from '../lib/xendit'
 
 export const calculatePrice = (amount: number) => {
@@ -15,7 +15,7 @@ export const createInvoice = async (amount: number, user: User) => {
   const price = calculatePrice(amount)
 
   const invoice: CreateInvoiceRequest = {
-    externalId: `topup_${user.id}_${crypto.randomUUID()}`,
+    externalId: `TOPUP_${user.id}_${crypto.randomUUID()}`,
     amount: price.gross,
     currency: 'IDR',
     customer: {
@@ -42,24 +42,6 @@ export const createInvoice = async (amount: number, user: User) => {
   })
 
   return response.invoiceUrl
-
-  // const authToken = Buffer.from(config.xenditSecret + ':').toString('base64')
-  //
-  // const response = await fetch('https://api.xendit.co/v2/invoices', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     Authorization: `Basic ${authToken}`,
-  //   },
-  //   body: JSON.stringify(invoice),
-  // })
-  // const data = await response.json()
-  // if (!response.ok) {
-  //   console.error(data.errors)
-  //   throw new Error('Terjadi kesalahan saat membuat invoice')
-  // }
-  //
-  // return data.invoice_url as string
 }
 
 const formatter = new Intl.NumberFormat('id-ID', {
