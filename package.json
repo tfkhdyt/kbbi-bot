@@ -33,7 +33,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.7.3",
     "@typescript-eslint/parser": "^6.7.3",
-    "better-sqlite3": "^8.6.0",
+    "better-sqlite3": "^8.7.0",
     "bun-types": "^1.0.3",
     "drizzle-kit": "^0.19.13",
     "eslint": "^8.50.0",
