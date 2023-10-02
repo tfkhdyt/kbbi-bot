@@ -30,7 +30,7 @@ bot.on(message('text'), (ctx) => textHandler(ctx))
 if (config.nodeEnv === 'production') {
   console.log('Bot is running in production')
   const webhook = await bot.createWebhook({ domain: config.botDomain })
-  // @ts-ignore
+  // @ts-expect-error fastify and telegraf webhook issue
   server.post(`/telegraf/${bot.secretPathComponent()}`, webhook)
   await server.listen({ port: config.port })
 } else {
