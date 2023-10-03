@@ -1,10 +1,8 @@
 FROM node:lts-alpine3.18 as builder
-RUN wget -qO- https://gobinaries.com/tj/node-prune | sh
 WORKDIR /app
 COPY package.json ./
 RUN npm i --omit=dev
 COPY . .
-RUN node-prune
 
 FROM node:lts-alpine3.18
 WORKDIR /app

@@ -1,7 +1,7 @@
-import Xendit from 'xendit-node'
+import { Invoice } from 'xendit-node'
 
-import config from '../config/config'
+import config from '../config/config.js'
 
-export const xenditClient = new Xendit({
+export const xenditClient = new Invoice({
   secretKey: config.xenditSecret,
 })

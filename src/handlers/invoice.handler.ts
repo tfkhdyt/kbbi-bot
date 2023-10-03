@@ -1,12 +1,12 @@
 import { Context, Markup } from 'telegraf'
-import { CallbackQuery, Update } from 'telegraf/typings/core/types/typegram'
+import { CallbackQuery, Update } from 'telegraf/types'
 
 import {
   calculatePrice,
   createInvoice,
   formatCurrency,
-} from '../services/payment.service'
-import { MyContext } from '../types/context'
+} from '../services/payment.service.js'
+import { MyContext } from '../types/context.js'
 
 export const invoiceHandler = async (
   ctx: Context<Update.CallbackQueryUpdate<CallbackQuery>> &

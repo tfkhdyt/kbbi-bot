@@ -1,9 +1,9 @@
-import { NarrowedContext } from 'telegraf/typings/context'
-import { Message, Update } from 'telegraf/typings/core/types/typegram'
+import { NarrowedContext } from 'telegraf'
+import { Message, Update } from 'telegraf/types'
 
-import { decreaseCredits } from '../repositories/user.repository'
-import { findWordDefinition } from '../services/scraper.service'
-import { MyContext } from '../types/context'
+import { decreaseCredits } from '../repositories/user.repository.js'
+import { findWordDefinition } from '../services/scraper.service.js'
+import { MyContext } from '../types/context.js'
 
 export const textHandler = async (
   ctx: NarrowedContext<

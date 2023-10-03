@@ -1,3 +1,5 @@
+import 'dotenv/config.js'
+
 import fastify from 'fastify'
 import { message } from 'telegraf/filters'
 
@@ -35,6 +37,6 @@ if (config.nodeEnv === 'production') {
   await server.listen({ port: config.port })
 } else {
   console.log('Bot is running in development')
-  await server.listen({ port: Number(config.port) })
+  await server.listen({ port: config.port })
   await bot.launch()
 }

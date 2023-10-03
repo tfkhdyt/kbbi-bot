@@ -1,8 +1,8 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
-import { bot } from '../lib/telegraf'
-import { increaseCredits } from '../repositories/user.repository'
-import { PaymentBody } from '../types/paymentBody'
+import { bot } from '../lib/telegraf.js'
+import { increaseCredits } from '../repositories/user.repository.js'
+import { PaymentBody } from '../types/paymentBody.js'
 
 export const callbackHandler = async (
   req: FastifyRequest<{ Body: PaymentBody }>,

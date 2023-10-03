@@ -1,4 +1,4 @@
-import { MyContext } from '../types/context'
+import { MyContext } from '../types/context.js'
 
 export const saldoHandler = async (ctx: MyContext) => {
   try {

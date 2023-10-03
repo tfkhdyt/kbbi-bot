@@ -1,7 +1,7 @@
 import { CreateInvoiceRequest, Invoice } from 'xendit-node/invoice/models'
 
-import { User } from '../db/sqlite/schemas/user.schema'
-import { xenditClient } from '../lib/xendit'
+import { User } from '../db/sqlite/schemas/user.schema.js'
+import { xenditClient } from '../lib/xendit.js'
 
 export const calculatePrice = (amount: number) => {
   const net = amount * 1000
@@ -37,7 +37,7 @@ export const createInvoice = async (amount: number, user: User) => {
     ],
   }
 
-  const response: Invoice = await xenditClient.Invoice.createInvoice({
+  const response: Invoice = await xenditClient.createInvoice({
     data: invoice,
   })
 

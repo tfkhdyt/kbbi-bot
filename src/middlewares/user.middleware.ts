@@ -2,8 +2,8 @@ import {
   addUser,
   findUserByID,
   updateUser,
-} from '../repositories/user.repository'
-import { MyContext } from '../types/context'
+} from '../repositories/user.repository.js'
+import { MyContext } from '../types/context.js'
 
 export const checkUserMiddleware = async (
   ctx: MyContext,

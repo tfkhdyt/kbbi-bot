@@ -1,7 +1,7 @@
 import { Markup } from 'telegraf'
 
-import { calculatePrice, formatCurrency } from '../services/payment.service'
-import { MyContext } from '../types/context'
+import { calculatePrice, formatCurrency } from '../services/payment.service.js'
+import { MyContext } from '../types/context.js'
 
 const createNominalButton = (amount: number) => {
   const price = calculatePrice(amount).gross

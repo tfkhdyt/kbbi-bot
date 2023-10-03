@@ -1,7 +1,7 @@
 import { eq, lt, sql } from 'drizzle-orm'
 
-import { db } from '../db/sqlite'
-import { NewUser, users } from '../db/sqlite/schemas/user.schema'
+import { db } from '../db/sqlite/index.js'
+import { NewUser, users } from '../db/sqlite/schemas/user.schema.js'
 
 export const findUserByID = async (id: number) =>
   await db.select().from(users).where(eq(users.id, id))

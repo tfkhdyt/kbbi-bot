@@ -1,6 +1,6 @@
 import { CheerioAPI, load } from 'cheerio'
 
-import { Pengertian } from '../types/scraper'
+import { Pengertian } from '../types/scraper.js'
 
 const fetchHTML = async (keyword: string) => {
   try {
