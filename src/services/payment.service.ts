@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import { CreateInvoiceRequest, Invoice } from 'xendit-node/invoice/models'
 
 import { User } from '../db/sqlite/schemas/user.schema.js'
