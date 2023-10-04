@@ -11,7 +11,7 @@ export const callbackHandler = async (
   try {
     const { body } = req
     if (body.transaction_status !== 'settlement') {
-      return reply.status(400).send('Status should be settlement')
+      return reply.status(200).send('Status should be settlement')
     }
 
     const [amount, userId] = body.order_id.split('_')
