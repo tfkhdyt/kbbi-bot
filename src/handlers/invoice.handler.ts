@@ -22,7 +22,7 @@ export const invoiceHandler = async (
     const price = calculatePrice(nominal).gross
     const formattedPrice = formatCurrency(price)
     const keyboard = Markup.inlineKeyboard([
-      Markup.button.webApp(`💵 Xendit Payment (${formattedPrice})`, invoiceUrl),
+      Markup.button.url(`💵 Midtrans Payment (${formattedPrice})`, invoiceUrl),
     ])
 
     await ctx.reply(

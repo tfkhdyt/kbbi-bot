@@ -1,11 +1,5 @@
 export type PaymentBody = {
-  status: string
-  id: string
-  external_id: string
-  items: [
-    {
-      quantity: number
-    },
-  ]
-  payment_channel: string
+  transaction_status: string
+  order_id: string
+  payment_type: string
 }

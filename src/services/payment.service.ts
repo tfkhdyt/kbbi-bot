@@ -1,8 +1,5 @@
-import crypto from 'crypto'
-import { CreateInvoiceRequest, Invoice } from 'xendit-node/invoice/models'
-
 import { User } from '../db/sqlite/schemas/user.schema.js'
-import { xenditClient } from '../lib/xendit.js'
+import { snap } from '../lib/midtrans.js'
 
 export const calculatePrice = (amount: number) => {
   const net = amount * 1000
@@ -13,36 +10,57 @@ export const calculatePrice = (amount: number) => {
 }
 
 export const createInvoice = async (amount: number, user: User) => {
-  const price = calculatePrice(amount)
+  try {
+    const price = calculatePrice(amount)
 
-  const invoice: CreateInvoiceRequest = {
-    externalId: `TOPUP_${user.id}_${crypto.randomUUID()}`,
-    amount: price.gross,
-    currency: 'IDR',
-    customer: {
-      givenNames: user.firstName,
-      surname: user.lastName,
-    },
-    items: [
-      {
-        name: 'Saldo KBBI Bot',
-        quantity: amount,
-        price: 1000,
+    // const authToken = Buffer.from(config.midtransServerKey + ':').toString(
+    //   'base64',
+    // )
+
+    const invoice = {
+      transaction_details: {
+        order_id: `${amount}_${user.id}_${crypto.randomUUID()}`,
+        gross_amount: price.gross,
       },
-    ],
-    fees: [
-      {
-        type: 'Biaya Admin',
-        value: price.adminFee,
+      item_details: [
+        {
+          name: 'Saldo KBBI Bot',
+          quantity: amount,
+          price: 1000,
+        },
+        {
+          name: 'Biaya Admin',
+          quantity: 1,
+          price: price.adminFee,
+        },
+      ],
+      customer_details: {
+        first_name: user.firstName,
+        last_name: user.lastName,
       },
-    ],
+    }
+
+    const response = await snap.createTransaction(invoice)
+    // const response = await fetch(
+    //   'https://app.sandbox.midtrans.com/snap/v1/transactions',
+    //   {
+    //     headers: {
+    //       Accept: 'application/json',
+    //       Authorization: `Basic ${authToken}`,
+    //       'Content-Type': 'application/json',
+    //     },
+    //     method: 'POST',
+    //     body: JSON.stringify(invoice),
+    //   },
+    // )
+    // const data = await response.json()
+    // console.log({ data })
+
+    return response.redirect_url as string
+  } catch (error) {
+    console.error(error)
+    throw error
   }
-
-  const response: Invoice = await xenditClient.createInvoice({
-    data: invoice,
-  })
-
-  return response.invoiceUrl
 }
 
 const formatter = new Intl.NumberFormat('id-ID', {

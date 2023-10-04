@@ -8,6 +8,8 @@ export default {
   databaseUrl: process.env.DATABASE_URL as string,
   databaseAuthToken: process.env.DATABASE_AUTH_TOKEN as string,
   xenditSecret: process.env.XENDIT_SECRET as string,
+  midtransServerKey: process.env.MIDTRANS_SERVER_KEY as string,
+  midtransClientKey: process.env.MIDTRANS_CLIENT_KEY as string,
   message: {
     start: `Selamat datang di bot *KBBI*
 
