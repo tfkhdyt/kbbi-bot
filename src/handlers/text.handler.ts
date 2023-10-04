@@ -21,8 +21,8 @@ export const textHandler = async (
     const keyword = ctx.message.text
     const result = await findWordDefinition(keyword)
 
-    await ctx.replyWithMarkdown(result)
     await decreaseCredits(ctx.user.id)
+    await ctx.replyWithMarkdown(result)
   } catch (error) {
     console.error(error)
     if (error instanceof Error) ctx.reply(error.message)
