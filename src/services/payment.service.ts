@@ -22,11 +22,13 @@ export const createInvoice = async (amount: number, user: User) => {
       },
       item_details: [
         {
+          id: 'SALDO',
           name: 'Saldo KBBI Bot',
           quantity: amount,
           price: 1000,
         },
         {
+          id: 'ADMIN_FEE',
           name: 'Biaya Admin',
           quantity: 1,
           price: price.adminFee,
