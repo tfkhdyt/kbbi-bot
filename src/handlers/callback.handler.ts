@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
+import config from '../config/config.js'
 import { bot } from '../lib/telegraf.js'
 import { increaseCredits } from '../repositories/user.repository.js'
 import { PaymentBody } from '../types/paymentBody.js'
@@ -18,10 +19,16 @@ export const callbackHandler = async (
     const paymentChannel = body.payment_type
 
     await increaseCredits(Number(userId), Number(amount))
-    await bot.telegram.sendMessage(
-      userId,
-      `Topup sejumlah ${amount} saldo melalui "${paymentChannel.toUpperCase()}" telah berhasil! Terima kasih telah menggunakan layanan kami`,
-    )
+    await Promise.allSettled([
+      bot.telegram.sendMessage(
+        userId,
+        `Topup sejumlah ${amount} saldo melalui "${paymentChannel.toUpperCase()}" telah berhasil! Terima kasih telah menggunakan layanan kami`,
+      ),
+      bot.telegram.sendMessage(
+        config.adminId,
+        `Topup sejumlah ${amount} saldo melalui "${paymentChannel.toUpperCase()}" telah berhasil!`,
+      ),
+    ])
 
     reply.status(200).send('Transaction success!')
   } catch (error) {
