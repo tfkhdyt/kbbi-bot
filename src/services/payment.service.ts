@@ -1,3 +1,5 @@
+import crypto from 'crypto'
+
 import { User } from '../db/sqlite/schemas/user.schema.js'
 import { snap } from '../lib/midtrans.js'
 
@@ -12,10 +14,6 @@ export const calculatePrice = (amount: number) => {
 export const createInvoice = async (amount: number, user: User) => {
   try {
     const price = calculatePrice(amount)
-
-    // const authToken = Buffer.from(config.midtransServerKey + ':').toString(
-    //   'base64',
-    // )
 
     const invoice = {
       transaction_details: {
@@ -41,20 +39,6 @@ export const createInvoice = async (amount: number, user: User) => {
     }
 
     const response = await snap.createTransaction(invoice)
-    // const response = await fetch(
-    //   'https://app.sandbox.midtrans.com/snap/v1/transactions',
-    //   {
-    //     headers: {
-    //       Accept: 'application/json',
-    //       Authorization: `Basic ${authToken}`,
-    //       'Content-Type': 'application/json',
-    //     },
-    //     method: 'POST',
-    //     body: JSON.stringify(invoice),
-    //   },
-    // )
-    // const data = await response.json()
-    // console.log({ data })
 
     return response.redirect_url as string
   } catch (error) {
