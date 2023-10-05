@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
-import config from '../config/config.js'
+import { ADMIN_ID } from '../config/config.js'
 import { bot } from '../lib/telegraf.js'
 import { increaseCredits } from '../repositories/user.repository.js'
 import { PaymentBody } from '../types/paymentBody.js'
@@ -25,7 +25,7 @@ export const callbackHandler = async (
         `Topup sejumlah ${amount} saldo melalui "${paymentChannel.toUpperCase()}" telah berhasil! Terima kasih telah menggunakan layanan kami`,
       ),
       bot.telegram.sendMessage(
-        config.adminId,
+        ADMIN_ID,
         `Topup sejumlah ${amount} saldo melalui "${paymentChannel.toUpperCase()}" telah berhasil!`,
       ),
     ])

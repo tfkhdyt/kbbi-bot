@@ -1,7 +1,7 @@
-import { Invoice } from 'xendit-node'
+// import { Invoice } from 'xendit-node'
 
-import config from '../config/config.js'
+// import config from '../config/config.js'
 
-export const xenditClient = new Invoice({
-  secretKey: config.xenditSecret,
-})
+// export const xenditClient = new Invoice({
+//   secretKey: config.xenditSecret,
+// })
