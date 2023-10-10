@@ -21,7 +21,10 @@ export const increaseCredits = async (userId: number, amount: number) =>
 export const decreaseCredits = async (userId: number) =>
   await db
     .update(users)
-    .set({ credits: sql`${users.credits} - 1` })
+    .set({
+      credits: sql`${users.credits} - 1`,
+      lastUsed: sql`CURRENT_TIMESTAMP`,
+    })
     .where(eq(users.id, userId))
 
 export const resetFreeCredits = async () =>

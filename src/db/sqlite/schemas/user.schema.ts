@@ -6,6 +6,7 @@ export const users = sqliteTable('users', {
   firstName: text('first_name', { length: 255 }),
   lastName: text('last_name', { length: 255 }),
   credits: integer('credits').default(3),
+  lastUsed: text('last_used'),
 })
 
 export type User = typeof users.$inferSelect
