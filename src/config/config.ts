@@ -10,6 +10,7 @@ export const {
   DATABASE_AUTH_TOKEN,
   MIDTRANS_SERVER_KEY,
   MIDTRANS_CLIENT_KEY,
+  SCRAPER_API_KEY,
 } = parseEnv(process.env, {
   BOT_DOMAIN: z.string().url().optional(),
   PORT: port().default(3000),
@@ -20,6 +21,7 @@ export const {
   DATABASE_AUTH_TOKEN: z.string().optional(),
   MIDTRANS_SERVER_KEY: z.string().min(1),
   MIDTRANS_CLIENT_KEY: z.string().min(1),
+  SCRAPER_API_KEY: z.string().min(1),
 })
 
 export const message = {
