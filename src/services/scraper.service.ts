@@ -1,18 +1,17 @@
 import { CheerioAPI, load } from 'cheerio'
 
-import { SCRAPER_API_KEY } from '../config/config.js'
 import { Pengertian } from '../types/scraper.js'
 
 const fetchHTML = async (keyword: string) => {
   try {
-    const response = await fetch(
-      `http://api.scraperapi.com?api_key=${SCRAPER_API_KEY}&url=https://kbbi.kemdikbud.go.id/entri/${keyword
-        .toLowerCase()
-        .trim()}`,
-    )
     // const response = await fetch(
-    //   `https://kbbi.kemdikbud.go.id/entri/${keyword.toLowerCase().trim()}`,
+    //   `http://api.scraperapi.com?api_key=${SCRAPER_API_KEY}&url=https://kbbi.kemdikbud.go.id/entri/${keyword
+    //     .toLowerCase()
+    //     .trim()}`,
     // )
+    const response = await fetch(
+      `https://kbbi.kemdikbud.go.id/entri/${keyword.toLowerCase().trim()}`,
+    )
     const data = await response.text()
     if (!response.ok) {
       throw new Error('Gagal untuk mengakses halaman KBBI')
